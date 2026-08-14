@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/*
+ * LumenSync design tokens — foundation layer.
+ * Character: premium, technical, precise, architectural, restrained.
+ * Family: near-black/dark navy, graphite, warm white, technical grays,
+ * restrained cyan/electric-blue accent (from the LumenSync logo family).
+ */
+
+:root {
+  /* Surfaces (dark, architectural) */
+  --surface-base: #0a1220; /* page background — near-black navy */
+  --surface-raised: #0e1a2e; /* cards, panels */
+  --surface-overlay: #142238; /* menus, elevated panels */
+  --surface-inset: #060c16; /* footer / recessed bands */
+
+  /* Foreground hierarchy */
+  --ink-strong: #f8fafc; /* headlines, primary text */
+  --ink-body: #c7d2e0; /* body copy */
+  --ink-muted: #8fa1b8; /* secondary/meta text */
+  --ink-faint: #8b9cb2; /* hints, disabled */
+
+  /* Brand accents (logo family) */
+  --accent: #39c7f4; /* primary cyan */
+  --accent-strong: #22aeef;
+  --accent-deep: #168eea;
+  --accent-ink: #06131f; /* text on accent fills */
+
+  /* Lines & borders */
+  --line-subtle: rgba(148, 178, 214, 0.14);
+  --line-strong: rgba(148, 178, 214, 0.28);
+
+  /* Focus */
+  --focus-ring: #39c7f4;
+}
+
+@theme inline {
+  --color-surface-base: var(--surface-base);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-inset: var(--surface-inset);
+
+  --color-ink-strong: var(--ink-strong);
+  --color-ink-body: var(--ink-body);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-ink: var(--accent-ink);
+
+  --color-line-subtle: var(--line-subtle);
+  --color-line-strong: var(--line-strong);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Container + rhythm */
+  --spacing-section: 6rem;
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
+
+  --shadow-raised: 0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 12px 32px rgba(2, 8, 20, 0.55);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--surface-base);
+  color: var(--ink-body);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Visible, consistent keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: rgba(57, 199, 244, 0.28);
+  color: var(--ink-strong);
+}
