@@ -3,7 +3,15 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * Foundation smoke suite: desktop + 375px mobile, run against a production
  * build (`next build` must have completed before `npm run test:e2e`).
+ *
+ * - `E2E_PORT` (default 3000): local port for `next start`.
+ * - `E2E_BASE_URL`: when set (e.g. a Vercel deployment URL) the suite runs
+ *   against that URL and no local server is started.
  */
+const port = Number(process.env.E2E_PORT ?? 3000);
+const localBaseURL = `http://127.0.0.1:${port}`;
+const externalBaseURL = process.env.E2E_BASE_URL;
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -11,7 +19,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {
-    baseURL: "http://127.0.0.1:3000",
+    baseURL: externalBaseURL ?? localBaseURL,
     trace: "on-first-retry",
     // Allow overriding the Chromium binary in sandboxed environments where
     // Playwright's exact browser revision is not downloadable.
@@ -19,12 +27,14 @@ export default defineConfig({
       ? { launchOptions: { executablePath: process.env.PW_CHROMIUM_PATH } }
       : {}),
   },
-  webServer: {
-    command: "npm run start",
-    url: "http://127.0.0.1:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
-  },
+  webServer: externalBaseURL
+    ? undefined
+    : {
+        command: `npm run start -- -p ${port}`,
+        url: localBaseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 60_000,
+      },
   projects: [
     {
       name: "desktop-chromium",

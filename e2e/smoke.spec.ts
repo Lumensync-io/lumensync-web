@@ -83,6 +83,42 @@ test.describe("foundation smoke", () => {
     await expect(signIn).toHaveAttribute("href", "https://app.lumensync.io");
   });
 
+  test("footer landmark links navigate", async ({ page }) => {
+    await page.goto("/");
+    const footer = page.getByRole("contentinfo");
+    await expect(footer).toBeVisible();
+    await footer.getByRole("link", { name: "Privacy Policy" }).click();
+    await expect(
+      page.getByRole("heading", { level: 1, name: /Privacy Policy/i }),
+    ).toBeVisible();
+  });
+
+  test("metadata is present and never canonicalises to a Vercel host", async ({
+    page,
+  }) => {
+    await page.goto("/product/checks");
+    await expect(page).toHaveTitle(/Automated Checks .* LumenSync/);
+    const description = page.locator('meta[name="description"]');
+    await expect(description).toHaveAttribute("content", /.+/);
+    const ogTitle = page.locator('meta[property="og:title"]');
+    await expect(ogTitle).toHaveAttribute("content", /.+/);
+    const canonical = await page
+      .locator('link[rel="canonical"]')
+      .getAttribute("href");
+    expect(canonical).toBe("https://lumensync.io/product/checks");
+    expect(canonical).not.toMatch(/vercel\.app/);
+  });
+
+  test("unknown routes render the not-found page with site chrome", async ({
+    page,
+  }) => {
+    const response = await page.goto("/this-route-does-not-exist");
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole("banner")).toBeVisible();
+    await expect(page.getByRole("contentinfo")).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
   test("homepage has no serious or critical axe violations", async ({
     page,
   }) => {

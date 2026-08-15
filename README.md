@@ -50,9 +50,16 @@ push and pull request.
 
 ## Environment variables
 
-None required at this stage. `process.env.VERCEL_ENV` (provided by Vercel) is
-read by `app/robots.ts` so that **only the production domain is ever
-indexable** — previews always serve `Disallow: /`.
+None required at this stage. Optional, test-only:
+
+- `E2E_PORT` — local port used by the Playwright web server (default `3000`).
+- `E2E_BASE_URL` — run the smoke suite against an already-deployed URL
+  (e.g. a Vercel preview) instead of starting a local server.
+
+`process.env.VERCEL_ENV` and `VERCEL_PROJECT_PRODUCTION_URL` (provided by
+Vercel) are read by `app/robots.ts` so that **only the real production domain
+(`lumensync.io`) is ever indexable** — previews and the `*.vercel.app` project
+URL always serve `Disallow: /`.
 
 ## Deployment
 
