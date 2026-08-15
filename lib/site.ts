@@ -3,6 +3,9 @@
  * The information architecture here mirrors the approved
  * "LumenSync Public Website — Architecture & Development Plan v1.0".
  * Do not add top-level product areas that are not in the plan.
+ *
+ * `title` and `description` are the page's real SEO metadata — they are used by
+ * `pageMetadata()` and by the sitemap, so each must be unique.
  */
 
 export const SITE_NAME = "LumenSync";
@@ -22,7 +25,7 @@ export interface PageDef {
   label: string;
   /** Document title (before the site suffix) */
   title: string;
-  /** Meta description + placeholder lead copy */
+  /** Meta description */
   description: string;
 }
 
@@ -32,49 +35,49 @@ export const productPages: PageDef[] = [
     label: "Drawings",
     title: "Drawing Coordination",
     description:
-      "Drawing-linked project intelligence: fixture placements, revisions, and coordination findings that lead directly back to the affected work on the drawing.",
+      "Place fixture types on the lighting drawings, track status on the sheet, and open findings, RFIs and field work at the exact location they came from.",
   },
   {
     path: "/product/checks",
     label: "Checks",
-    title: "Automated Checks",
+    title: "Coordination Checks",
     description:
-      "LumenSync doesn't just organize the lighting package — it checks it, surfacing coordination conditions like missing approved cut sheets, missing wattage, and schedule/controls conflicts.",
+      "LumenSync compares the fixture schedule against what is placed on the drawings and reports the disagreements as reviewable findings — never as confirmed errors.",
   },
   {
     path: "/product/fixtures",
     label: "Fixture Intelligence",
-    title: "Fixture Intelligence",
+    title: "Fixture Information",
     description:
-      "One fixture record connects schedule, placement, specifications, approved cut sheets, controls, status, issues, and history.",
+      "Import and version the fixture schedule, hold manufacturer, model, wattage and voltage per type, and track which types still lack approved cut-sheet evidence.",
   },
   {
     path: "/product/controls",
     label: "Controls",
     title: "Controls Coordination",
     description:
-      "Fixture-to-controls relationships and compatibility checking, so controls conflicts surface before they become field problems.",
+      "Keep control drawings and controls documents with the lighting package, map fixture types to control zones under review, and surface mismatches as findings.",
   },
   {
     path: "/product/field",
     label: "Field Hub",
     title: "Field Hub",
     description:
-      "The same project truth in the field: drawings, fixture information, status, and issues — no separate versions of the project.",
+      "Install progress by fixture type and by drawing, on a phone: scheduled, wired and remaining, with every type linked to the sheet it is placed on.",
   },
   {
     path: "/product/rfis",
     label: "RFIs & Resolution",
     title: "RFIs & Resolution",
     description:
-      "Generate and manage RFIs from coordination findings, with fixture and drawing context attached and resolution history preserved.",
+      "Coordination findings become drafted RFI candidates with evidence attached. A manager reviews and issues; LumenSync never sends an RFI on its own.",
   },
   {
     path: "/product/closeout",
     label: "Closeout",
-    title: "Closeout",
+    title: "Closeout Readiness",
     description:
-      "Carry the connected project record through installation, documentation, and closeout — one continuous project history.",
+      "A read-only readiness view of open field issues, unconfirmed RFIs, missing cut-sheet evidence, drawings of record and the state of the last checks run.",
   },
 ];
 
@@ -84,28 +87,28 @@ export const primaryNav: PageDef[] = [
     label: "Product",
     title: "Product Overview",
     description:
-      "How LumenSync creates one connected source of truth for complex commercial lighting projects.",
+      "One lighting record — schedule, types, documentation, drawings, placements, findings, RFIs and field status — with the drawing as the connective tissue.",
   },
   {
     path: "/why-lumensync",
     label: "Why LumenSync",
     title: "Why LumenSync",
     description:
-      "The lighting package isn't one document. LumenSync connects the pieces and surfaces coordination gaps before they cost time in the field.",
+      "Why commercial lighting coordination goes wrong late, and the four decisions LumenSync is built on: the drawing as index, findings not verdicts, human decisions, nothing lost.",
   },
   {
     path: "/security",
     label: "Security",
     title: "Security",
     description:
-      "Your projects remain your projects. How LumenSync approaches access, isolation, and data protection.",
+      "How LumenSync handles access, tenant boundaries, server-side authorisation, environment separation and gated releases — and which certifications we do not claim.",
   },
   {
     path: "/about",
     label: "Company",
     title: "About LumenSync",
     description:
-      "LumenSync was developed from firsthand commercial electrical contracting experience and tested against real lighting projects.",
+      "LumenSync is an independent software product built around one problem: making complex commercial lighting coordination legible, from schedule to closeout.",
   },
 ];
 
@@ -115,25 +118,28 @@ export const utilityPages: PageDef[] = [
     label: "Request Demo",
     title: "Request a Demo",
     description:
-      "See LumenSync on a real lighting package. Request a demo and we'll walk through your workflow.",
+      "See LumenSync walked through a real commercial lighting package — schedule, drawings, checks, findings, RFIs and field status — in about forty minutes.",
   },
   {
     path: "/contact",
     label: "Contact",
     title: "Contact",
-    description: "Get in touch with the LumenSync team.",
+    description:
+      "How to reach the LumenSync team, whether you are evaluating the product, already using it, or reporting a security concern.",
   },
   {
     path: "/legal/privacy",
     label: "Privacy",
     title: "Privacy Policy",
-    description: "LumenSync privacy policy.",
+    description:
+      "The LumenSync privacy policy. The final policy text is being prepared and will be published here before the site goes live on its production domain.",
   },
   {
     path: "/legal/terms",
     label: "Terms",
     title: "Terms of Service",
-    description: "LumenSync terms of service.",
+    description:
+      "The LumenSync terms of service. The final terms are being prepared and will be published here before the site goes live on its production domain.",
   },
 ];
 

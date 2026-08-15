@@ -10,11 +10,11 @@ import {
 import { findPage } from "@/lib/site";
 
 /**
- * Restrained structural placeholder used by routes whose full implementation
- * belongs to later work items. Establishes the correct heading hierarchy,
- * metadata, and page rhythm without inventing content.
+ * Per-route metadata built from the single route registry in `lib/site.ts`, so
+ * title, description, canonical and Open Graph can never drift apart. The
+ * canonical is always a path resolved against `metadataBase`
+ * (https://lumensync.io) — never a deployment host.
  */
-
 export function pageMetadata(path: string): Metadata {
   const page = findPage(path);
   if (!page) return {};
@@ -22,9 +22,23 @@ export function pageMetadata(path: string): Metadata {
     title: page.title,
     description: page.description,
     alternates: { canonical: path },
+    openGraph: {
+      url: path,
+      title: page.title,
+      description: page.description,
+    },
+    twitter: {
+      title: page.title,
+      description: page.description,
+    },
   };
 }
 
+/**
+ * Restrained structural placeholder for routes whose full implementation
+ * belongs to a later work item. Establishes heading hierarchy and page rhythm
+ * without inventing content.
+ */
 export function PageScaffold({
   path,
   eyebrow,
@@ -55,11 +69,6 @@ export function PageScaffold({
           </div>
         </div>
         {children}
-        <p className="mt-16 max-w-3xl border-t border-line-subtle pt-6 text-sm text-ink-faint">
-          The full {page.label.toLowerCase()} page is being built as part of the
-          LumenSync website program and will feature real product functionality
-          — no mockups, no fabricated claims.
-        </p>
       </Container>
     </Section>
   );

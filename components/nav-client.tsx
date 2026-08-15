@@ -184,6 +184,13 @@ export function MobileNav({
               </Link>
             ))}
             <div className="my-3 border-t border-line-subtle" aria-hidden="true" />
+            <Link
+              href="/contact"
+              onClick={close}
+              className="block min-h-11 rounded-[var(--radius-control)] px-3 py-2.5 text-base text-ink-body hover:bg-surface-raised hover:text-ink-strong"
+            >
+              Contact
+            </Link>
             <a
               href={appUrl}
               onClick={close}
