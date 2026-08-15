@@ -90,11 +90,11 @@ test.describe("foundation smoke", () => {
   test("product overview and a feature page respond", async ({ page }) => {
     await page.goto("/product");
     await expect(
-      page.getByRole("heading", { level: 1, name: /connected lighting/i }),
+      page.getByRole("heading", { level: 1, name: /One lighting record/i }),
     ).toBeVisible();
     await page.goto("/product/checks");
     await expect(
-      page.getByRole("heading", { level: 1, name: /Automated Checks/i }),
+      page.getByRole("heading", { level: 1, name: /Findings, not verdicts/i }),
     ).toBeVisible();
   });
 
@@ -119,8 +119,9 @@ test.describe("foundation smoke", () => {
         .getByRole("link", { name: "Why LumenSync" })
         .click();
     }
+    await expect(page).toHaveURL(/\/why-lumensync$/);
     await expect(
-      page.getByRole("heading", { level: 1, name: /Why LumenSync/i }),
+      page.getByRole("heading", { level: 1, name: /bites you late/i }),
     ).toBeVisible();
   });
 
@@ -199,7 +200,7 @@ test.describe("foundation smoke", () => {
     page,
   }) => {
     await page.goto("/product/checks");
-    await expect(page).toHaveTitle(/Automated Checks .* LumenSync/);
+    await expect(page).toHaveTitle(/Coordination Checks .* LumenSync/);
     const description = page.locator('meta[name="description"]');
     await expect(description).toHaveAttribute("content", /.+/);
     const ogTitle = page.locator('meta[property="og:title"]');

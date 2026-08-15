@@ -7,6 +7,7 @@ import rfiReview from "@/public/product/rfi-review.webp";
 import fixtureSchedule from "@/public/product/fixture-schedule.webp";
 import fieldDesktop from "@/public/product/field-desktop.webp";
 import fieldMobile from "@/public/product/field-mobile.webp";
+import closeoutReadiness from "@/public/product/closeout-readiness.webp";
 
 /**
  * Registry of every real-product capture that may appear on the public site.
@@ -80,6 +81,12 @@ export const productMedia = {
     image: fieldMobile,
     surface: "Field — phone layout",
     alt: "LumenSync Field view on a phone: overall install progress, scheduled, wired and remaining counts, and fixture-type cards with 'View on E-101' links.",
+  },
+  closeoutReadiness: {
+    file: "closeout-readiness.webp",
+    image: closeoutReadiness,
+    surface: "Closeout readiness — tracked categories",
+    alt: "LumenSync closeout readiness view: an overall needs-review summary with counts of clear, needs-review, blocking and not-tracked categories, above a checklist covering field issues, RFIs, fixture cut-sheet evidence, drawings of record and consistency checks.",
   },
 } satisfies Record<string, ProductMedia>;
 
