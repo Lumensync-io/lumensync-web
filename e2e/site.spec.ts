@@ -56,9 +56,18 @@ test.describe("core site", () => {
         if (m.type() === "error") errors.push(m.text());
       };
       page.on("console", onConsole);
-      page.on("requestfailed", (r) => failures.push(`REQFAIL ${r.url()}`));
+      // Vercel's deployment-protection handshake (/.well-known/vercel/…) and
+      // the navigation aborts it causes are preview infrastructure, not site
+      // defects; everything else must succeed.
+      const infra = (url: string) => url.includes("/.well-known/vercel/");
+      page.on("requestfailed", (r) => {
+        if (infra(r.url())) return;
+        if (r.failure()?.errorText === "net::ERR_ABORTED") return;
+        failures.push(`REQFAIL ${r.url()}`);
+      });
       page.on("response", (r) => {
-        if (r.status() >= 400) failures.push(`HTTP${r.status()} ${r.url()}`);
+        if (r.status() >= 400 && !infra(r.url()))
+          failures.push(`HTTP${r.status()} ${r.url()}`);
       });
 
       const response = await page.goto(route, { waitUntil: "networkidle" });
