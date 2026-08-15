@@ -21,6 +21,18 @@ export default defineConfig({
   use: {
     baseURL: externalBaseURL ?? localBaseURL,
     trace: "on-first-retry",
+    // Vercel preview deployments sit behind Vercel Authentication. When the
+    // project's "Protection Bypass for Automation" secret is supplied via the
+    // environment (never committed), send it so the suite can run against a
+    // PR preview. See https://vercel.com/docs/deployment-protection.
+    ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+      ? {
+          extraHTTPHeaders: {
+            "x-vercel-protection-bypass":
+              process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+          },
+        }
+      : {}),
     // Allow overriding the Chromium binary in sandboxed environments where
     // Playwright's exact browser revision is not downloadable.
     ...(process.env.PW_CHROMIUM_PATH

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   BodyCopy,
   Container,
@@ -5,225 +6,312 @@ import {
   Eyebrow,
   LinkButton,
   Section,
-  SectionHeading,
 } from "@/components/primitives";
-import { SITE_DESCRIPTION } from "@/lib/site";
+import { Callout } from "@/components/marketing/callout";
+import { CtaBand } from "@/components/marketing/cta-band";
+import { ProductFrame } from "@/components/marketing/product-frame";
+import { SectionIntro } from "@/components/marketing/section-intro";
+import { SplitFeature } from "@/components/marketing/split-feature";
+import { WorkflowChain } from "@/components/marketing/workflow-chain";
+import {
+  CHECKS,
+  CLOSEOUT,
+  DRAWINGS,
+  FIELD,
+  FINAL_CTA,
+  FIXTURES,
+  HERO,
+  PROBLEM,
+  RFIS,
+  WORKFLOW,
+} from "@/lib/homepage-content";
+import { PRODUCT_MEDIA_SOURCE, productMedia } from "@/lib/product-media";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 
-const scopeItems = [
-  "Drawing Coordination",
-  "Fixture Schedules",
-  "Cut Sheets",
-  "Controls",
-  "Checks",
-  "RFIs",
-  "Field Status",
-];
+export const metadata: Metadata = {
+  title: { absolute: `${SITE_NAME} — ${SITE_TAGLINE}` },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+  },
+};
 
-const packagePieces = [
-  "Drawings",
-  "Fixture Schedule",
-  "Submittals",
-  "Controls",
-  "RFIs",
-  "Revisions",
-  "Field Information",
-];
-
-const workflowSteps = [
-  {
-    title: "Bring in the lighting package",
-    body: "Drawings, fixture schedules, cut sheets, submittals, and controls information enter LumenSync.",
-  },
-  {
-    title: "Build the lighting record",
-    body: "Fixture types, drawing locations, schedule data, approved documentation, and controls relationships connect into one record.",
-  },
-  {
-    title: "Check the coordination",
-    body: "LumenSync identifies conditions requiring attention — missing approved cut sheets, missing wattage, schedule and controls conflicts.",
-  },
-  {
-    title: "Resolve issues in context",
-    body: "Open a finding, go straight to the affected drawing, review connected information, and take linked action — including RFIs.",
-  },
-  {
-    title: "Carry truth into the field",
-    body: "The same project record continues through field coordination, installation, documentation, and closeout.",
-  },
-];
-
-export default function HomePage() {
+function Provenance({ children }: { children: string }) {
   return (
     <>
-      {/* Hero */}
-      <Section className="pb-10 sm:pb-14" aria-labelledby="hero-heading">
-        <Container>
-          <div className="max-w-3xl">
-            <Eyebrow>Lighting Coordination Intelligence</Eyebrow>
-            <span id="hero-heading">
-              <DisplayHeading>
-                Complex Lighting Installs, Finally Tied to the{" "}
-                <span className="text-accent">Drawings.</span>
-              </DisplayHeading>
-            </span>
-            <BodyCopy className="mt-6">{SITE_DESCRIPTION}</BodyCopy>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <LinkButton href="/request-demo" variant="primary">
-                Request a Demo
-              </LinkButton>
-              <LinkButton href="/product" variant="secondary">
-                See LumenSync in Action
-              </LinkButton>
-            </div>
-          </div>
+      {children}{" "}
+      <span className="text-ink-faint/80">· {PRODUCT_MEDIA_SOURCE}</span>
+    </>
+  );
+}
 
-          {/* Product frame placeholder — replaced with real product UI in the
-              product-media work item. Deliberately not a fake screenshot. */}
-          <div
-            className="mt-14 rounded-[var(--radius-card)] border border-line-subtle bg-surface-raised p-6 shadow-[var(--shadow-raised)] sm:p-10"
-            aria-hidden="true"
-          >
-            <div className="flex items-center gap-2 border-b border-line-subtle pb-4">
-              <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-              <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-              <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-              <span className="ml-3 text-xs text-ink-faint">
-                LumenSync — live product demonstration coming to this space
+export default function HomePage() {
+  const headlineLead = HERO.headline.replace(HERO.headlineAccent, "").trimEnd();
+  return (
+    <>
+      {/* ── Hero ─────────────────────────────────────────────── */}
+      <Section
+        id="hero"
+        className="pb-12 pt-14 sm:pb-16 sm:pt-20"
+        aria-labelledby="hero-heading"
+      >
+        <Container>
+          <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-6">
+              <Eyebrow>{HERO.eyebrow}</Eyebrow>
+              <span id="hero-heading">
+                <DisplayHeading>
+                  {headlineLead}{" "}
+                  <span className="text-accent">{HERO.headlineAccent}</span>
+                </DisplayHeading>
               </span>
+              <BodyCopy className="mt-6 text-ink-body">{HERO.lead}</BodyCopy>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <LinkButton href={HERO.primaryCta.href} variant="primary">
+                  {HERO.primaryCta.label}
+                </LinkButton>
+                <LinkButton href={HERO.secondaryCta.href} variant="secondary">
+                  {HERO.secondaryCta.label}
+                </LinkButton>
+              </div>
+              <p className="mt-6 text-sm text-ink-muted">{HERO.audience}</p>
             </div>
-            <div className="grid gap-4 pt-6 sm:grid-cols-3">
-              <div className="rounded-md border border-line-subtle p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-                  Check
-                </p>
-                <p className="mt-2 text-sm text-ink-body">
-                  Missing approved cut sheet
-                </p>
-                <p className="mt-3 text-xs font-medium text-accent">
-                  View on Drawing →
-                </p>
-              </div>
-              <div className="rounded-md border border-line-subtle p-4 sm:col-span-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-                  Drawing
-                </p>
-                <div className="mt-3 grid h-28 grid-cols-6 gap-px opacity-60">
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <div key={i} className="border border-line-subtle" />
-                  ))}
-                </div>
-              </div>
+            <div className="lg:col-span-6">
+              <ProductFrame
+                image={productMedia.drawingFocus.image}
+                alt={productMedia.drawingFocus.alt}
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                caption={<Provenance>{HERO.mediaCaption}</Provenance>}
+              />
             </div>
           </div>
         </Container>
       </Section>
 
-      {/* Scope strip */}
-      <Section className="border-y border-line-subtle bg-surface-inset py-10 sm:py-12">
+      {/* ── Problem ──────────────────────────────────────────── */}
+      <Section
+        id="problem"
+        className="border-t border-line-subtle bg-surface-inset"
+        aria-labelledby="problem-heading"
+      >
         <Container>
-          <p className="text-center text-sm font-medium text-ink-muted">
-            Built for complex commercial lighting coordination
-          </p>
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-            {scopeItems.map((item) => (
+          <SectionIntro
+            id="problem-heading"
+            eyebrow={PROBLEM.eyebrow}
+            heading={PROBLEM.heading}
+            lead={PROBLEM.lead}
+          />
+          <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {PROBLEM.pieces.map((piece) => (
               <li
-                key={item}
-                className="text-sm font-semibold tracking-wide text-ink-body"
+                key={piece}
+                className="rounded-[var(--radius-card)] border border-line-subtle bg-surface-raised px-4 py-3 text-sm font-medium text-ink-body"
               >
-                {item}
+                {piece}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 flex items-center gap-3 rounded-[var(--radius-card)] border border-accent-deep bg-surface-raised px-4 py-3 text-sm font-semibold text-accent">
+            <span aria-hidden="true">→</span>
+            {PROBLEM.outcome}
+          </p>
+        </Container>
+      </Section>
+
+      {/* ── How it works ─────────────────────────────────────── */}
+      <Section
+        id="how-it-works"
+        className="scroll-mt-20 border-t border-line-subtle"
+        aria-labelledby="how-it-works-heading"
+      >
+        <Container>
+          <SectionIntro
+            id="how-it-works-heading"
+            eyebrow={WORKFLOW.eyebrow}
+            heading={WORKFLOW.heading}
+            lead={WORKFLOW.lead}
+          />
+          <div className="mt-10">
+            <WorkflowChain
+              ariaLabel="LumenSync connected workflow"
+              steps={[...WORKFLOW.steps]}
+            />
+          </div>
+        </Container>
+      </Section>
+
+      {/* ── Drawings ─────────────────────────────────────────── */}
+      <SplitFeature
+        id="drawings"
+        eyebrow={DRAWINGS.eyebrow}
+        heading={DRAWINGS.heading}
+        lead={DRAWINGS.lead}
+        points={[...DRAWINGS.points]}
+        cta={DRAWINGS.cta}
+        media={
+          <ProductFrame
+            image={productMedia.drawingViewer.image}
+            alt={productMedia.drawingViewer.alt}
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            caption={<Provenance>{DRAWINGS.caption}</Provenance>}
+          />
+        }
+      />
+
+      {/* ── Checks ───────────────────────────────────────────── */}
+      <SplitFeature
+        id="checks"
+        reverse
+        eyebrow={CHECKS.eyebrow}
+        heading={CHECKS.heading}
+        lead={CHECKS.lead}
+        points={[...CHECKS.points]}
+        cta={CHECKS.cta}
+        media={
+          <ProductFrame
+            image={productMedia.checks.image}
+            alt={productMedia.checks.alt}
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            caption={<Provenance>{CHECKS.caption}</Provenance>}
+          />
+        }
+      >
+        <Callout label={CHECKS.honesty.label} className="mt-8">
+          {CHECKS.honesty.body}
+        </Callout>
+      </SplitFeature>
+
+      {/* ── RFIs ─────────────────────────────────────────────── */}
+      <SplitFeature
+        id="rfis"
+        eyebrow={RFIS.eyebrow}
+        heading={RFIS.heading}
+        lead={RFIS.lead}
+        cta={RFIS.cta}
+        media={
+          <ProductFrame
+            image={productMedia.rfiReview.image}
+            alt={productMedia.rfiReview.alt}
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            caption={<Provenance>{RFIS.caption}</Provenance>}
+          />
+        }
+      >
+        <ol
+          aria-label="RFI workflow"
+          className="mt-8 space-y-3 border-l border-line-strong pl-5"
+        >
+          {RFIS.steps.map((step, i) => (
+            <li key={step.label} className="relative">
+              <span
+                aria-hidden="true"
+                className="absolute -left-[1.45rem] top-1.5 h-2.5 w-2.5 rounded-full border border-accent bg-surface-base"
+              />
+              <p className="text-sm font-semibold text-ink-strong">
+                <span className="mr-2 tabular-nums text-accent">{i + 1}.</span>
+                {step.label}
+              </p>
+              <p className="mt-0.5 text-sm text-ink-muted">{step.detail}</p>
+            </li>
+          ))}
+        </ol>
+        <Callout label={RFIS.honesty.label} className="mt-8">
+          {RFIS.honesty.body}
+        </Callout>
+      </SplitFeature>
+
+      {/* ── Field ────────────────────────────────────────────── */}
+      <SplitFeature
+        id="field"
+        reverse
+        eyebrow={FIELD.eyebrow}
+        heading={FIELD.heading}
+        lead={FIELD.lead}
+        points={[...FIELD.points]}
+        cta={FIELD.cta}
+        media={
+          <div className="grid items-start gap-6 sm:grid-cols-5">
+            <div className="sm:col-span-2">
+              <ProductFrame
+                variant="phone"
+                image={productMedia.fieldMobile.image}
+                alt={productMedia.fieldMobile.alt}
+                caption={<Provenance>{FIELD.caption}</Provenance>}
+              />
+            </div>
+            <div className="hidden sm:col-span-3 sm:block">
+              <ProductFrame
+                image={productMedia.fieldDesktop.image}
+                alt={productMedia.fieldDesktop.alt}
+                sizes="(min-width: 1024px) 34vw, 60vw"
+                caption="Field — desktop layout with scheduled, wired and remaining totals."
+              />
+            </div>
+          </div>
+        }
+      />
+
+      {/* ── Fixtures ─────────────────────────────────────────── */}
+      <SplitFeature
+        id="fixtures"
+        eyebrow={FIXTURES.eyebrow}
+        heading={FIXTURES.heading}
+        lead={FIXTURES.lead}
+        points={[...FIXTURES.points]}
+        cta={FIXTURES.cta}
+        media={
+          <ProductFrame
+            image={productMedia.fixtureSchedule.image}
+            alt={productMedia.fixtureSchedule.alt}
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            caption={<Provenance>{FIXTURES.caption}</Provenance>}
+          />
+        }
+      />
+
+      {/* ── Closeout / confidence ────────────────────────────── */}
+      <Section
+        id="closeout"
+        className="border-t border-line-subtle bg-surface-inset"
+        aria-labelledby="closeout-heading"
+      >
+        <Container>
+          <SectionIntro
+            id="closeout-heading"
+            eyebrow={CLOSEOUT.eyebrow}
+            heading={CLOSEOUT.heading}
+            lead={CLOSEOUT.lead}
+          />
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {CLOSEOUT.outcomes.map((o) => (
+              <li
+                key={o.title}
+                className="rounded-[var(--radius-card)] border border-line-subtle bg-surface-raised p-5"
+              >
+                <h3 className="text-sm font-semibold text-ink-strong">
+                  {o.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                  {o.body}
+                </p>
               </li>
             ))}
           </ul>
         </Container>
       </Section>
 
-      {/* The problem → connected record */}
-      <Section aria-labelledby="problem-heading">
-        <Container>
-          <div className="max-w-2xl">
-            <Eyebrow>The Problem</Eyebrow>
-            <span id="problem-heading">
-              <SectionHeading>
-                Your lighting package isn&apos;t one document.
-              </SectionHeading>
-            </span>
-            <BodyCopy className="mt-4">
-              The information that defines a commercial lighting install lives
-              across drawings, schedules, submittals, controls documents, RFIs,
-              revisions, and field notes. Those pieces are deeply connected —
-              but traditional workflows treat them independently.
-            </BodyCopy>
-          </div>
-          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {packagePieces.map((piece) => (
-              <div
-                key={piece}
-                className="rounded-[var(--radius-card)] border border-line-subtle bg-surface-raised px-4 py-3 text-sm font-medium text-ink-body"
-              >
-                {piece}
-              </div>
-            ))}
-            <div className="rounded-[var(--radius-card)] border border-accent-deep bg-surface-raised px-4 py-3 text-sm font-semibold text-accent">
-              → One connected LumenSync project record
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Workflow */}
-      <Section
-        className="border-t border-line-subtle"
-        aria-labelledby="workflow-heading"
-      >
-        <Container>
-          <div className="max-w-2xl">
-            <Eyebrow>How It Works</Eyebrow>
-            <span id="workflow-heading">
-              <SectionHeading>
-                From lighting package to project truth.
-              </SectionHeading>
-            </span>
-          </div>
-          <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {workflowSteps.map((step, i) => (
-              <li
-                key={step.title}
-                className="rounded-[var(--radius-card)] border border-line-subtle bg-surface-raised p-5"
-              >
-                <p className="text-sm font-bold text-accent">{i + 1}</p>
-                <h3 className="mt-2 text-sm font-semibold text-ink-strong">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                  {step.body}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </Section>
-
-      {/* Final CTA */}
-      <Section
-        className="border-t border-line-subtle bg-surface-inset"
-        aria-labelledby="cta-heading"
-      >
-        <Container className="text-center">
-          <span id="cta-heading">
-            <SectionHeading>
-              Your next lighting package shouldn&apos;t live in six places.
-            </SectionHeading>
-          </span>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <LinkButton href="/request-demo" variant="primary">
-              Request a LumenSync Demo
-            </LinkButton>
-            <LinkButton href="/product" variant="secondary">
-              See the Product
-            </LinkButton>
-          </div>
-        </Container>
-      </Section>
+      {/* ── Final CTA ────────────────────────────────────────── */}
+      <CtaBand
+        id="cta"
+        heading={FINAL_CTA.heading}
+        body={FINAL_CTA.body}
+        primary={FINAL_CTA.primary}
+        secondary={FINAL_CTA.secondary}
+      />
     </>
   );
 }
