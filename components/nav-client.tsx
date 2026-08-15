@@ -146,7 +146,10 @@ export function MobileNav({
       {open ? (
         <div
           id={panelId}
-          className="fixed inset-x-0 top-16 bottom-0 z-50 overflow-y-auto border-t border-line-subtle bg-surface-base px-5 pb-10 pt-4"
+          // Positioned relative to the sticky header (which is a containing
+          // block because of `backdrop-blur`), so `absolute` + explicit height
+          // rather than `fixed` — otherwise the panel collapses behind the page.
+          className="absolute inset-x-0 top-full z-50 h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line-subtle bg-surface-base px-5 pb-10 pt-4"
         >
           <nav aria-label="Mobile primary">
             <p className="px-1 pb-1 pt-3 text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted">

@@ -62,6 +62,46 @@ test.describe("foundation smoke", () => {
     ).toBeVisible();
   });
 
+  test("mobile menu panel is opaque and covers the viewport", async ({
+    page,
+  }, testInfo) => {
+    test.skip(testInfo.project.name !== "mobile-375", "mobile only");
+    await page.goto("/");
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const nav = page.getByRole("navigation", { name: "Mobile primary" });
+    const panel = nav.locator("xpath=..");
+    const box = await panel.boundingBox();
+    expect(box).not.toBeNull();
+    // Panel starts right below the 64px header and fills the rest of the screen.
+    expect(Math.round(box!.y)).toBe(64);
+    expect(box!.height).toBeGreaterThan(500);
+    // The hero heading behind the panel must not be the topmost element.
+    const overview = nav.getByRole("link", { name: "Overview" });
+    const linkBox = (await overview.boundingBox())!;
+    const topmostIsLink = await page.evaluate(
+      ([x, y]) => {
+        const el = document.elementFromPoint(x, y);
+        return !!el?.closest('a[href="/product"]');
+      },
+      [linkBox.x + linkBox.width / 2, linkBox.y + linkBox.height / 2],
+    );
+    expect(topmostIsLink).toBe(true);
+    // And the hero headline underneath must be fully covered by the panel.
+    const heroBox = (await page
+      .getByRole("heading", { level: 1 })
+      .first()
+      .boundingBox())!;
+    const panelId = (await panel.getAttribute("id"))!;
+    const heroCovered = await page.evaluate(
+      ([x, y, id]) =>
+        !!document
+          .elementFromPoint(Number(x), Number(y))
+          ?.closest(`[id="${id}"]`),
+      [heroBox.x + heroBox.width / 2, heroBox.y + heroBox.height / 2, panelId],
+    );
+    expect(heroCovered).toBe(true);
+  });
+
   test("desktop product menu opens with keyboard and mouse", async ({
     page,
   }, testInfo) => {
