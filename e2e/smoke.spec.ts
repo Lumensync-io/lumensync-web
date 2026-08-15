@@ -225,13 +225,31 @@ test.describe("foundation smoke", () => {
     for (const selector of [
       'meta[property="og:title"]',
       'meta[property="og:description"]',
-      'meta[property="og:image"]',
+      'meta[property="og:url"]',
       'meta[name="twitter:card"]',
+    ]) {
+      const content = await page.locator(selector).first().getAttribute("content");
+      expect(content, selector).toBeTruthy();
+      expect(content, selector).not.toMatch(/vercel\.app/);
+    }
+    // Next.js deliberately resolves file-based OG/Twitter *images* against the
+    // Vercel deployment/branch URL on preview deployments (so link previews of
+    // a preview render); on production they resolve against metadataBase
+    // (lumensync.io). Accept lumensync.io, or a *.vercel.app host only when the
+    // page itself is being served from *.vercel.app — never any other host.
+    const onVercelPreview = /\.vercel\.app$/.test(new URL(page.url()).host);
+    for (const selector of [
+      'meta[property="og:image"]',
       'meta[name="twitter:image"]',
     ]) {
       const content = await page.locator(selector).first().getAttribute("content");
       expect(content, selector).toBeTruthy();
-      expect(content).not.toMatch(/vercel\.app/);
+      const host = new URL(content!, page.url()).host;
+      expect(
+        host === "lumensync.io" ||
+          (onVercelPreview && /\.vercel\.app$/.test(host)),
+        `${selector} host ${host}`,
+      ).toBe(true);
     }
     const ogImage = await page
       .locator('meta[property="og:image"]')

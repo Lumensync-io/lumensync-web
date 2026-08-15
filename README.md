@@ -55,6 +55,10 @@ None required at this stage. Optional, test-only:
 - `E2E_PORT` — local port used by the Playwright web server (default `3000`).
 - `E2E_BASE_URL` — run the smoke suite against an already-deployed URL
   (e.g. a Vercel preview) instead of starting a local server.
+- `VERCEL_AUTOMATION_BYPASS_SECRET` — optional; when set, Playwright sends the
+  `x-vercel-protection-bypass` header so the suite can reach a Vercel preview
+  that sits behind Vercel Authentication. Supply it from your shell or CI
+  secrets only — never commit it.
 
 `process.env.VERCEL_ENV` and `VERCEL_PROJECT_PRODUCTION_URL` (provided by
 Vercel) are read by `app/robots.ts` so that **only the real production domain
