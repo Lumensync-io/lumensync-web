@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { findForbiddenContent } from "../tests/forbidden-terms";
 
 test.describe("foundation smoke", () => {
   test("homepage renders the approved headline", async ({ page }) => {
@@ -13,6 +14,67 @@ test.describe("foundation smoke", () => {
     await expect(
       page.getByRole("link", { name: "Request a Demo" }).first(),
     ).toBeVisible();
+  });
+
+  test("homepage sections, CTAs and real-product captures render", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    // Section order (WEB-004 homepage plan).
+    const order = [
+      "hero",
+      "problem",
+      "how-it-works",
+      "drawings",
+      "checks",
+      "rfis",
+      "field",
+      "fixtures",
+      "closeout",
+      "cta",
+    ];
+    const tops: number[] = [];
+    for (const id of order) {
+      const el = page.locator(`#${id}`);
+      await expect(el).toHaveCount(1);
+      tops.push((await el.boundingBox())!.y);
+    }
+    for (let i = 1; i < tops.length; i++) expect(tops[i]).toBeGreaterThan(tops[i - 1]);
+    // Hero CTA targets.
+    const hero = page.locator("#hero");
+    await expect(hero.getByRole("link", { name: "Request a Demo" })).toHaveAttribute(
+      "href",
+      "/request-demo",
+    );
+    await expect(hero.getByRole("link", { name: "See how it works" })).toHaveAttribute(
+      "href",
+      "#how-it-works",
+    );
+    // Scroll the whole page so lazy images load, then require every visible
+    // product capture to have decoded (no broken images).
+    await page.evaluate(async () => {
+      for (let y = 0; y < document.body.scrollHeight; y += 500) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 80));
+      }
+    });
+    await page.waitForFunction(() =>
+      [...document.images]
+        .filter((i) => i.offsetParent !== null)
+        .every((i) => i.complete && i.naturalWidth > 0),
+    );
+    const broken = await page.evaluate(() =>
+      [...document.images]
+        .filter((i) => i.offsetParent !== null && i.naturalWidth === 0)
+        .map((i) => i.currentSrc),
+    );
+    expect(broken).toEqual([]);
+    // Every capture is captioned with demo-tenant provenance.
+    const captions = page.locator("figcaption");
+    expect(await captions.count()).toBeGreaterThanOrEqual(6);
+    // No forbidden brand / customer text anywhere on the page.
+    const text = await page.evaluate(() => document.body.innerText);
+    expect(findForbiddenContent(text)).toEqual([]);
   });
 
   test("no horizontal overflow", async ({ page }) => {

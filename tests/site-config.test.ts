@@ -6,6 +6,7 @@ import {
   SITE_URL,
   APP_URL,
 } from "@/lib/site";
+import { findForbiddenContent } from "./forbidden-terms";
 
 describe("site configuration (Plan v1.0 IA)", () => {
   it("has unique route paths", () => {
@@ -40,8 +41,8 @@ describe("site configuration (Plan v1.0 IA)", () => {
 
   it("never includes legacy customer routes", () => {
     const paths = allPages.map((p) => p.path);
-    expect(paths.some((p) => p.includes("cactus-club"))).toBe(false);
-    expect(paths.some((p) => p.includes("project-login"))).toBe(false);
+    expect(findForbiddenContent(paths.join(" "))).toEqual([]);
+    expect(paths.some((p) => /login/i.test(p))).toBe(false);
   });
 
   it("has exactly seven product feature pages", () => {

@@ -68,9 +68,21 @@ branches create preview deployments; nothing in this repository may attach or
 alter production DNS (`lumensync.io` / `www.lumensync.io`) — production
 cutover is governed by a separate, explicitly-authorized work item.
 
+## Product imagery (public-repo safety)
+
+Every image under `public/product/` is a real capture of the LumenSync app
+taken from the vendor-owned **demo project (DEMO-2026-001)** — synthetic
+fixture types, a QA test drawing, no customer data. Each file must be
+registered in `lib/product-media.ts` (alt text + surface + provenance) and is
+rendered only through `components/marketing/product-frame.tsx`, which always
+shows the provenance caption. `tests/public-assets.test.ts` fails the build if
+an unregistered asset, a forbidden brand/customer term, or a secret-like
+string appears in public site source. Never add customer screenshots.
+
 ## Guardrails
 
 - No customer data, project names, drawings, or credentials in this repo.
 - No fabricated customers, testimonials, metrics, or certifications in copy.
-- Legacy customer surfaces (`/cactus-club/`, `/project-login/`) are **not**
-  part of this site and must not be recreated here.
+- Legacy customer surfaces from the current static site (the customer sign-in
+  and per-customer paths) are **not** part of this site and must not be
+  recreated here. `tests/forbidden-terms.ts` enforces this without naming them.

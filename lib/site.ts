@@ -13,7 +13,7 @@ export const SITE_TAGLINE =
   "Complex Lighting Installs, Finally Tied to the Drawings.";
 
 export const SITE_DESCRIPTION =
-  "LumenSync connects drawings, fixture schedules, submittals, controls, RFIs, field status, and coordination issues into one lighting-specific project record — then helps identify gaps before they become field problems.";
+  "LumenSync ties fixture schedules, cut sheets, submittals, controls, checks, RFIs and field status back to the actual lighting drawings — so coordination gaps show up on the sheet, before they show up on the job.";
 
 export interface PageDef {
   /** Route path beginning with "/" */
