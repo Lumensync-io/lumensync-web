@@ -55,7 +55,6 @@ export function SiteFooter() {
               projects — drawings, schedules, submittals, controls, and field
               status, finally connected.
             </p>
-            <p className="mt-4 text-xs text-ink-faint">A TradeSync product</p>
           </div>
           <FooterColumn
             heading="Product"
