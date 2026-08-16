@@ -14,7 +14,14 @@ import type { LegalPage } from "@/lib/content/legal";
  * awaiting legal approval are rendered as two visually distinct blocks so a
  * reader can never mistake an outstanding item for a published commitment.
  */
-export function LegalPageBody({ page }: { page: LegalPage }) {
+export function LegalPageBody({
+  page,
+  sectionNotes = {},
+}: {
+  page: LegalPage;
+  /** Keyed by section heading — states the live behaviour of that section. */
+  sectionNotes?: Record<string, string>;
+}) {
   return (
     <>
       <Section aria-labelledby="page-heading">
@@ -53,6 +60,11 @@ export function LegalPageBody({ page }: { page: LegalPage }) {
                   <h3 className="text-lg font-semibold text-ink-strong">
                     {section.heading}
                   </h3>
+                  {sectionNotes[section.heading] ? (
+                    <p className="mt-3 rounded-[var(--radius-control)] border border-line-strong bg-surface-raised p-3 text-sm leading-relaxed text-ink-body">
+                      {sectionNotes[section.heading]}
+                    </p>
+                  ) : null}
                   {section.lead ? (
                     <p className="mt-2 text-base leading-relaxed text-ink-body">
                       {section.lead}

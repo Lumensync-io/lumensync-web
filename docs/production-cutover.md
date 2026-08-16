@@ -77,17 +77,28 @@ is — is a better long-term shape, but it can only happen after the legacy
 customer surfaces are deliberately retired or rehomed on their own hostname.
 That is an owner decision and is out of scope here.
 
-## 4. Decisions required before this runbook can run
+## 4. Decisions — made, and what each now requires
 
-1. **Legacy customer routes**: preserve via origin override (this runbook), or
-   retire. Retiring is a separate authorization and needs customer notice.
-2. **Demo request destination**: the URL and credential that
-   `DEMO_REQUEST_WEBHOOK_URL` / `DEMO_REQUEST_FORM_SECRET` /
-   `DEMO_REQUEST_WEBHOOK_TOKEN` will hold. Without it the form stays honestly
-   inactive after cutover, which is a valid but visible launch state.
-3. **Legal pages**: publish with the current factual disclosures and the visible
-   "still to be approved" list, or hold the launch until final text exists.
-4. **Indexing**: whether the site is to be indexed at all at launch, and when.
+| Decision | Owner ruling | What it requires before cutover |
+|---|---|---|
+| Legacy customer routes | **Preserve.** Not retired, not exposed | The origin override in C3, proven as a no-op first |
+| Demo request destination | **A LumenSync-controlled Azure webhook/function feeding a dedicated LumenSync demo-request mailbox.** No third-party form vendor | The endpoint, the mailbox, a named backup monitor, and the end-to-end receipt proof in P4 |
+| Legal pages | **Public launch is gated on counsel-approved Privacy and Terms** | The approved text shipped, `LEGAL_CONTENT_STATE` flipped to `"approved"` in the same change, and the approval recorded |
+| Indexing | **Never while legal content is unapproved** | Now enforced in code — see section 4a |
+
+### 4a. The four indexing gates
+
+Indexing requires **all four**, and each is independent:
+
+1. `VERCEL_ENV=production`
+2. the production host equals the canonical host (`www.lumensync.io`)
+3. `SITE_INDEXABLE=true`
+4. `LEGAL_CONTENT_APPROVED=true`
+
+Neither flag substitutes for the other. Additionally, the build **fails** if
+`LEGAL_CONTENT_APPROVED` is set while the repository still ships pre-approval
+legal text, so the flag cannot be set ahead of the words. Attaching the domain
+satisfies condition 2 only — it does not publish the site.
 
 ## 5. Pre-cutover — evidence and anchors
 
@@ -154,9 +165,11 @@ verification means stop and roll back rather than continue.
   briefly for issuance and re-enable the proxy immediately afterwards — that
   variant does expose the origin during the window, so prefer TXT.
 - Verify: Vercel lists the domain as valid with a certificate issued.
-- Note that adding the domain changes `VERCEL_PROJECT_PRODUCTION_URL`, which is
-  one of the three conditions for indexing. Indexing still stays off, because
-  `SITE_INDEXABLE` is not set. That is by design.
+- Note that adding the domain changes `VERCEL_PROJECT_PRODUCTION_URL`, which
+  satisfies one of the four indexing conditions. Indexing still stays off,
+  because neither `SITE_INDEXABLE` nor `LEGAL_CONTENT_APPROVED` is set. Verify
+  this rather than assuming it: `robots.txt` must still say `Disallow: /` and
+  responses must still carry `X-Robots-Tag: noindex` after the domain is added.
 
 **C2. Set the SSL/TLS mode.**
 
@@ -193,9 +206,13 @@ verification means stop and roll back rather than continue.
 **C6. Run the acceptance checklist in section 7.** Do not enable indexing until
 it passes end to end.
 
-**C7. Enable indexing — a separate, deliberate step.**
+**C7. Enable indexing — a separate, deliberate step, and the last one.**
 
-- Set `SITE_INDEXABLE=true` on the production environment and redeploy.
+- Prerequisite: the counsel-approved Privacy and Terms text is already shipped
+  and `LEGAL_CONTENT_STATE` is `"approved"` in that same build. If it is not,
+  stop — setting the flag will fail the build, which is the intended behaviour.
+- Set **both** `SITE_INDEXABLE=true` and `LEGAL_CONTENT_APPROVED=true` on the
+  production environment and redeploy.
 - Verify: `robots.txt` allows crawling and names the sitemap; no response
   carries `X-Robots-Tag: noindex`; `sitemap.xml` lists only
   `https://www.lumensync.io` URLs; every canonical matches the page's own URL.
@@ -257,6 +274,62 @@ Run against `https://www.lumensync.io` after C4, and again after C7.
       mobile data.
 - [ ] A cold browser profile with no extensions shows the same result.
 
+## 7a. Cloudflare rule ordering — and how each rule is reversed
+
+Order matters: Cloudflare evaluates origin rules top-down and the **first match
+wins**, so the two legacy-path rules must sit above anything that could match
+them. The whole marketing site is served by the default origin (the `www` DNS
+record), so it needs no rule of its own — which is what keeps this reversible.
+
+| # | Rule | Matches | Action | Reversal |
+|---|---|---|---|---|
+| 1 | Legacy path A origin override | `http.host eq "www.lumensync.io" and starts_with(http.request.uri.path, "<LEGACY_PATH_A>")` | Resolve to `<AZURE_ORIGIN_HOST>`, Host header overridden to what Azure expects | Disable the rule; the path then follows the default origin. Delete only after the routing is settled |
+| 2 | Legacy path B origin override | same shape, `<LEGACY_PATH_B>` | as above | as above |
+| — | Everything else | no rule | Default origin = the `www` DNS record | Change the record back (step R2) |
+
+Rules that must **not** be touched, in any order: the apex-to-`www` redirect
+rule, and the Access applications on the two legacy paths. Access is evaluated
+before origin selection, so an origin rule cannot bypass it — but a rule that
+changed the hostname or stripped the path prefix could put a request outside the
+Access application's scope. Keep both rules matching the same hostname and the
+same path prefix the Access applications use.
+
+Two verification points, both mandatory:
+
+- **Before** the origin moves (C3): with the rules live and `www` still on
+  Azure, both paths behave exactly as recorded in P1. This proves the rules are
+  a no-op.
+- **After** the origin moves (C4): both paths still present the Access login and
+  still serve after authentication, while the marketing routes come from Vercel.
+
+If either verification fails, disable the two rules and stop. The site is then
+exactly as it was.
+
+## 7b. Pre-cutover evidence record — the template to fill
+
+Kept in the private cutover record, never in this repository. Every rollback
+step reads a value from here.
+
+| Field | Value | Captured |
+|---|---|---|
+| Date and operator | | |
+| Website `main` SHA | | |
+| Green CI run ID | | |
+| Current production deployment ID (`<ROLLBACK_DEPLOYMENT>`) | | |
+| Cloudflare zone export filename | | |
+| `www` record: type, content, proxy state, TTL (`<AZURE_ORIGIN_HOST>`) | | |
+| Apex record and the apex→`www` redirect rule definition | | |
+| Access application A: name, hostname, path, policies | | |
+| Access application B: name, hostname, path, policies | | |
+| SSL/TLS encryption mode before the change | | |
+| Existing cache / origin / transform rules | | |
+| Azure static-website endpoint hostname, and its direct response | | |
+| `app.lumensync.io` record, byte for byte | | |
+| Demo endpoint URL configured, and the receipt proof reference | | |
+| Mailbox address, primary monitor, backup monitor | | |
+| Legal approval: approver, document version, date | | |
+| `SITE_INDEXABLE` / `LEGAL_CONTENT_APPROVED` before the change (both must be unset) | | |
+
 ## 8. Rollback
 
 ### Triggers — any one of these, no debate at the time
@@ -275,9 +348,11 @@ Run against `https://www.lumensync.io` after C4, and again after C7.
 
 ### Sequence
 
-**R1. Take indexing back off first, if it was on.** Unset `SITE_INDEXABLE`,
+**R1. Take indexing back off first, if it was on.** Unset `SITE_INDEXABLE` (and
+`LEGAL_CONTENT_APPROVED` if the reason for rolling back is the legal content),
 redeploy, confirm `robots.txt` is `Disallow: /` and responses carry
-`X-Robots-Tag: noindex`. Doing this first stops the problem spreading into
+`X-Robots-Tag: noindex`. Either flag alone is enough to close the gate, so this
+is a single-variable action. Doing it first stops the problem spreading into
 search results while the rest is fixed.
 
 **R2. Restore the origin.** Change the `www` record back to
@@ -296,6 +371,12 @@ DNS change is involved.
 **R4. Leave the rest in place.** The Vercel domain attachment and the origin
 rules are harmless once the origin points back at Azure, and removing them
 during an incident adds risk. Remove them later, deliberately.
+
+Rollback time is dominated by the Cloudflare configuration save and the cache
+purge, not by DNS: both hostnames already resolve to Cloudflare and the public
+records do not change, so there is **no propagation wait** in the reversal path.
+The one exception is the Vercel domain attachment itself, which is why R4 leaves
+it alone rather than unwinding it under pressure.
 
 **R5. If the fault is in the site rather than the routing**, and routing is to
 be kept: promote `<ROLLBACK_DEPLOYMENT>` in Vercel, or revert the offending
