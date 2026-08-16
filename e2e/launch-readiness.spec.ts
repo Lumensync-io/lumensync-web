@@ -7,6 +7,20 @@ import { expect, test } from "@playwright/test";
  * third party or writes to the browser.
  */
 
+/**
+ * Vercel injects its preview toolbar (vercel.live) into preview deployments,
+ * and the deployment-protection handshake sets its own cookies. Neither exists
+ * on a real production host, and neither comes from this codebase — so they are
+ * excluded only while the suite is pointed at a `*.vercel.app` deployment. On
+ * the production hostname the assertions below allow nothing at all.
+ */
+function platformInjected(baseURL: string): boolean {
+  return /\.vercel\.app$/.test(new URL(baseURL).hostname);
+}
+
+const VERCEL_COOKIE = /^(_vercel|vercel-)/;
+const VERCEL_ORIGIN = /^https:\/\/([a-z0-9-]+\.)*vercel\.live\//;
+
 const PAGES = [
   "/",
   "/product",
@@ -97,23 +111,34 @@ test.describe("launch readiness", () => {
   test("no page sets a cookie or writes to browser storage", async ({
     page,
     context,
+    baseURL,
   }) => {
+    const allowPlatform = platformInjected(baseURL!);
     for (const path of PAGES) {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
     }
     const cookies = (await context.cookies()).filter(
-      // Deployment-protection cookies belong to the Vercel preview handshake,
-      // not to the site itself.
-      (cookie) => !cookie.name.startsWith("_vercel"),
+      (cookie) =>
+        !(
+          allowPlatform &&
+          (VERCEL_COOKIE.test(cookie.name) || cookie.domain.endsWith("vercel.live"))
+        ),
     );
-    expect(cookies).toEqual([]);
+    expect(cookies.map((cookie) => `${cookie.domain}${cookie.name}`)).toEqual([]);
 
     const storage = await page.evaluate(() => ({
-      local: window.localStorage.length,
-      session: window.sessionStorage.length,
+      local: Object.keys(window.localStorage),
+      session: Object.keys(window.sessionStorage),
     }));
-    expect(storage).toEqual({ local: 0, session: 0 });
+    // `__vtkb-*` and `vc-*` are the preview toolbar's own keys.
+    const PLATFORM_KEY = /^(__vtkb|vc-)|vercel|flags-?sdk/i;
+    const ours = (keys: string[]) =>
+      keys.filter((key) => !(allowPlatform && PLATFORM_KEY.test(key)));
+    expect({
+      local: ours(storage.local),
+      session: ours(storage.session),
+    }).toEqual({ local: [], session: [] });
   });
 
   test("no page requests anything from a third-party origin", async ({
@@ -121,11 +146,14 @@ test.describe("launch readiness", () => {
     baseURL,
   }) => {
     const origin = new URL(baseURL!).origin;
+    const allowPlatform = platformInjected(baseURL!);
     const foreign: string[] = [];
     page.on("request", (request) => {
       const url = request.url();
       if (url.startsWith("data:") || url.startsWith("blob:")) return;
-      if (!url.startsWith(origin)) foreign.push(url);
+      if (url.startsWith(origin)) return;
+      if (allowPlatform && VERCEL_ORIGIN.test(url)) return;
+      foreign.push(url);
     });
 
     for (const path of PAGES) {
