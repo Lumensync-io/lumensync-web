@@ -4,11 +4,15 @@ import { FeatureGrid } from "@/components/marketing/feature-grid";
 import { PageHero } from "@/components/marketing/page-hero";
 import { pageMetadata } from "@/components/page-scaffold";
 import { CONTACT as C } from "@/lib/content/conversion";
+import { isDemoRequestEnabled } from "@/lib/demo-request/config";
 import { APP_URL } from "@/lib/site";
 
 export const metadata = pageMetadata("/contact");
 
 export default function ContactPage() {
+  // The page describes the routes that actually work on this deployment.
+  const honesty = isDemoRequestEnabled() ? C.honesty.online : C.honesty.offline;
+
   return (
     <>
       <PageHero hero={C.hero} />
@@ -43,7 +47,7 @@ export default function ContactPage() {
               Straight about how to reach us
             </h2>
             <Callout label={C.honesty.label} className="mt-6">
-              {C.honesty.body}
+              {honesty}
             </Callout>
             <p className="mt-6 text-sm leading-relaxed text-ink-muted">
               Security concerns are covered on the{" "}

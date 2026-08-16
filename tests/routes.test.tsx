@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { Metadata } from "next";
 
@@ -26,11 +26,22 @@ import RequestDemoPage, {
   metadata as demoMeta,
 } from "@/app/request-demo/page";
 import ContactPage, { metadata as contactMeta } from "@/app/contact/page";
+import PrivacyPage from "@/app/legal/privacy/page";
+import TermsPage from "@/app/legal/terms/page";
 
 import { findForbiddenContent } from "./forbidden-terms";
 import { productPages, findPage } from "@/lib/site";
 import { PRODUCT_AREA_BLURBS } from "@/lib/content/product";
-import { DEMO_FORM_LIVE } from "@/lib/content/conversion";
+import {
+  DEMO_FORM_LIVE_NOTICE,
+  DEMO_FORM_UNAVAILABLE,
+} from "@/lib/content/conversion";
+import { DemoRequestForm } from "@/components/demo-request-form";
+import { isDemoRequestEnabled } from "@/lib/demo-request/config";
+import {
+  DEMO_REQUEST_FIELDS,
+  HONEYPOT_FIELD,
+} from "@/lib/demo-request/schema";
 
 interface RouteCase {
   path: string;
@@ -167,9 +178,12 @@ describe("core site routes (LSWEB-005)", () => {
     expect(text).not.toMatch(/\bcertified\b|\bcompliant with\b|\battested\b/i);
   });
 
-  it("request-demo is honest about the missing submission backend", () => {
+  it("request-demo is inactive and says so while delivery is unconfigured", () => {
+    // No delivery destination is configured in a checkout, so this renders the
+    // fail-closed state — the same state a deployment without the environment
+    // variables gets.
+    expect(isDemoRequestEnabled()).toBe(false);
     render(<RequestDemoPage />);
-    expect(DEMO_FORM_LIVE).toBe(false);
     const submit = screen.getByRole("button", { name: "Request a Demo" });
     expect(submit).toBeDisabled();
     for (const input of Array.from(document.querySelectorAll("input, textarea"))) {
@@ -181,6 +195,47 @@ describe("core site routes (LSWEB-005)", () => {
     for (const input of Array.from(document.querySelectorAll("input, textarea"))) {
       const id = input.getAttribute("id")!;
       expect(document.querySelector(`label[for="${id}"]`)).not.toBeNull();
+    }
+  });
+
+  it("request-demo form is live and honest when delivery is configured", () => {
+    render(
+      <DemoRequestForm
+        enabled
+        unavailableNotice={DEMO_FORM_UNAVAILABLE}
+        liveNotice={DEMO_FORM_LIVE_NOTICE}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Request a Demo" })).toBeEnabled();
+    for (const field of DEMO_REQUEST_FIELDS) {
+      const control = document.getElementById(field.id);
+      expect(control, field.id).not.toBeNull();
+      expect(control).toBeEnabled();
+      expect(document.querySelector(`label[for="${field.id}"]`)).not.toBeNull();
+    }
+    const status = document.getElementById("form-status");
+    expect(status?.textContent ?? "").not.toMatch(/aren't switched on yet/i);
+    // The decoy field is hidden from everyone who is not a bot.
+    const honeypot = document.getElementById(HONEYPOT_FIELD)!;
+    expect(honeypot.getAttribute("tabindex")).toBe("-1");
+    expect(honeypot.closest("[aria-hidden='true']")).not.toBeNull();
+  });
+
+  it("legal pages separate factual disclosure from what still needs approval", () => {
+    for (const [name, Component] of [
+      ["privacy", PrivacyPage],
+      ["terms", TermsPage],
+    ] as const) {
+      cleanup();
+      render(<Component />);
+      const text = document.body.textContent ?? "";
+      expect(screen.getAllByRole("heading", { level: 1 }), name).toHaveLength(1);
+      expect(text, name).toMatch(/Still to be written and approved/);
+      expect(text, name).toMatch(/reviewed by a lawyer/);
+      // No invented commitment slipped into the factual half.
+      expect(text, name).not.toMatch(/we (guarantee|promise|warrant)/i);
+      expect(text, name).not.toMatch(/\bwe will never\b/i);
+      expect(text, name).not.toMatch(/\b\d+\s+(days?|months?|years?)\b/i);
     }
   });
 

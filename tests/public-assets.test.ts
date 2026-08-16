@@ -26,7 +26,10 @@ const SECRET_PATTERNS: RegExp[] = [
   /AKIA[0-9A-Z]{12,}/,
   /vercel_[a-z0-9]{20,}/i,
   /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
-  /\b[A-Za-z0-9._%+-]+@(?!lumensync\.io\b)[A-Za-z0-9.-]+\.[a-z]{2,}\b/, // e-mail
+  // Any real e-mail address. RFC 2606 reserves example.com/net/org precisely so
+  // that documentation and test fixtures can name an address that can never
+  // belong to a person, so those are the one allowed shape.
+  /\b[A-Za-z0-9._%+-]+@(?!lumensync\.io\b)(?!(?:[A-Za-z0-9-]+\.)*example\.(com|net|org)\b)[A-Za-z0-9.-]+\.[a-z]{2,}\b/,
   /\(\d{3}\)\s?\d{3}-\d{4}|\b\d{3}-\d{3}-\d{4}\b/, // phone
 ];
 

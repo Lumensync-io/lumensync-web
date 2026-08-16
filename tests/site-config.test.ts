@@ -54,7 +54,7 @@ describe("site configuration (Plan v1.0 IA)", () => {
   });
 
   it("points at the correct production and app domains", () => {
-    expect(SITE_URL).toBe("https://lumensync.io");
+    expect(SITE_URL).toBe("https://www.lumensync.io");
     expect(APP_URL).toBe("https://app.lumensync.io");
   });
 

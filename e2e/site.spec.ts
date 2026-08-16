@@ -94,7 +94,7 @@ test.describe("core site", () => {
       expect(meta.title, `${route} title`).toContain("LumenSync");
       expect(meta.description.length, `${route} description`).toBeGreaterThan(40);
       expect(meta.canonical, `${route} canonical`).toMatch(
-        /^https:\/\/lumensync\.io/,
+        /^https:\/\/www\.lumensync\.io/,
       );
       expect(titles.has(meta.title), `${route} duplicate title`).toBe(false);
       expect(
@@ -225,7 +225,7 @@ test.describe("core site", () => {
     expect(sitemap.status()).toBe(200);
     const xml = await sitemap.text();
     for (const route of ROUTES) {
-      const loc = route === "/" ? "https://lumensync.io" : `https://lumensync.io${route}`;
+      const loc = route === "/" ? "https://www.lumensync.io" : `https://www.lumensync.io${route}`;
       expect(xml, `sitemap contains ${route}`).toContain(`<loc>${loc}</loc>`);
     }
     expect(xml).not.toMatch(/vercel\.app/);

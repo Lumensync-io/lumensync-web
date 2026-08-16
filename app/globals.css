@@ -30,6 +30,11 @@
   --line-subtle: rgba(148, 178, 214, 0.14);
   --line-strong: rgba(148, 178, 214, 0.28);
 
+  /* Validation — form errors only; never used decoratively */
+  --danger-strong: #f2695a; /* borders, non-text indicators */
+  --danger-ink: #ffb4a8; /* error text on dark surfaces */
+  --danger-soft: rgba(242, 105, 90, 0.1); /* error message background */
+
   /* Focus */
   --focus-ring: #39c7f4;
 }
@@ -52,6 +57,10 @@
 
   --color-line-subtle: var(--line-subtle);
   --color-line-strong: var(--line-strong);
+
+  --color-danger-strong: var(--danger-strong);
+  --color-danger-ink: var(--danger-ink);
+  --color-danger-soft: var(--danger-soft);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 

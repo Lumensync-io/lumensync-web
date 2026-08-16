@@ -142,7 +142,11 @@ export const SECURITY = {
     points: [
       {
         title: "The marketing site holds no customer data",
-        body: "The site you are reading is a separate, statically-built application. It has no database connection, no customer records and no access to the LumenSync application.",
+        body: "The site you are reading is a separate application on separate infrastructure. It has no database, no customer records and no access to the LumenSync application or its data.",
+      },
+      {
+        title: "The one thing this site accepts",
+        body: "The demo request form is the only place this website takes personal information. A submission is validated, forwarded once to the team, and not stored here — and if it cannot be delivered you are told it was not received rather than shown a false confirmation.",
       },
       {
         title: "Product imagery is synthetic",
