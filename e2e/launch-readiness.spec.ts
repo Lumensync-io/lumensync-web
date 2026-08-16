@@ -67,6 +67,7 @@ test.describe("launch readiness", () => {
 
   test("the demo endpoint reports its real state and refuses what it should", async ({
     request,
+    baseURL,
   }) => {
     const { state } = await readDemoStatus(request);
 
@@ -74,8 +75,13 @@ test.describe("launch readiness", () => {
     // unconfigured deployments have nowhere to send it, and configured ones
     // require the signed anti-automation token this request deliberately omits.
     // Either way the answer must be a refusal, never a 200.
+    //
+    // The Origin header is set deliberately. Without it the same-origin guard
+    // rejects the request first, and this test would only ever re-prove the
+    // cross-origin case that the next test already covers — never reaching the
+    // token check it exists to exercise.
     const submission = await request.post("/api/demo-request", {
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", origin: baseURL! },
       data: {
         name: "Test Person",
         email: "test@example.com",
