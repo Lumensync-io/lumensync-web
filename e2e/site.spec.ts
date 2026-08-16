@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { findForbiddenContent } from "../tests/forbidden-terms";
+import { expectFormMatchesState, readDemoStatus } from "./demo-state";
 
 /**
  * Whole-site coverage for the core public experience (LSWEB-005). The
@@ -216,8 +217,15 @@ test.describe("core site", () => {
       await expect(cta, `${route} demo CTA`).toBeVisible();
     }
     await page.goto("/request-demo");
-    await expect(page.getByRole("button", { name: "Request a Demo" })).toBeDisabled();
-    await expect(page.locator("#form-status")).toContainText(/aren't switched on yet/i);
+    const { state } = await readDemoStatus(page.request);
+    await expectFormMatchesState(page, state);
+
+    // Whichever state it is in, the fields stay labelled and usable by a screen
+    // reader — an inactive form is disabled, not broken.
+    for (const field of ["name", "email", "company", "role", "message"]) {
+      await expect(page.locator(`label[for="${field}"]`), `${field} label`).toHaveCount(1);
+      await expect(page.locator(`#${field}`), `${field} control`).toHaveCount(1);
+    }
   });
 
   test("sitemap and robots stay production-safe", async ({ page }) => {

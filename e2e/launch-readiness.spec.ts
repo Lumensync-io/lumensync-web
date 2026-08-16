@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { expectFormMatchesState, readDemoStatus } from "./demo-state";
 
 /**
  * Launch-gate behaviour that must hold on every deployment until the cutover is
@@ -64,16 +65,15 @@ test.describe("launch readiness", () => {
     expect(headers["x-powered-by"]).toBeUndefined();
   });
 
-  test("the demo endpoint reports honestly that it is not switched on", async ({
+  test("the demo endpoint reports its real state and refuses what it should", async ({
     request,
   }) => {
-    const status = await request.get("/api/demo-request");
-    expect(status.status()).toBe(200);
-    expect(status.headers()["cache-control"]).toContain("no-store");
-    const statusBody = await status.json();
-    expect(statusBody.enabled).toBe(false);
-    expect(statusBody.token).toBeUndefined();
+    const { state } = await readDemoStatus(request);
 
+    // A submission that must be refused whichever state the deployment is in:
+    // unconfigured deployments have nowhere to send it, and configured ones
+    // require the signed anti-automation token this request deliberately omits.
+    // Either way the answer must be a refusal, never a 200.
     const submission = await request.post("/api/demo-request", {
       headers: { "content-type": "application/json" },
       data: {
@@ -84,16 +84,35 @@ test.describe("launch readiness", () => {
         message: "",
       },
     });
-    // Fail-closed: never a 200 for something that was not delivered.
-    expect(submission.status()).toBe(503);
     const failure = await submission.json();
-    expect(failure.ok).toBe(false);
-    expect(failure.code).toBe("not-configured");
-    expect(String(failure.message)).toMatch(/aren't switched on yet/i);
+    expect(failure.ok, "a refused submission is never reported as ok").toBe(false);
 
-    // No internals leak in the failure path.
+    if (state === "unconfigured") {
+      expect(submission.status()).toBe(503);
+      expect(failure.code).toBe("not-configured");
+      expect(String(failure.message)).toMatch(/aren't switched on yet/i);
+    } else {
+      // Fail-closed the other way: live, but still not accepting anything that
+      // did not come from a real page load.
+      expect(submission.status()).toBe(400);
+      expect(failure.code).toBe("token-rejected");
+      expect(failure.reference, "nothing was delivered, so no reference").toBeUndefined();
+    }
+
+    // No internals leak in either refusal path.
     const raw = JSON.stringify(failure);
     expect(raw).not.toMatch(/DEMO_REQUEST_|webhook|stack|at Object\./i);
+  });
+
+  test("the rendered form agrees with the deployment's own configuration", async ({
+    page,
+    request,
+  }) => {
+    // The guard against a release that changed build-time configuration but
+    // reused cached prerendered output: the API and the HTML must not disagree.
+    const { state } = await readDemoStatus(request);
+    await page.goto("/request-demo");
+    await expectFormMatchesState(page, state);
   });
 
   test("the demo endpoint refuses a cross-origin post", async ({ request }) => {

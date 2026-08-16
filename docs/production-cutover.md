@@ -100,6 +100,29 @@ Neither flag substitutes for the other. Additionally, the build **fails** if
 legal text, so the flag cannot be set ahead of the words. Attaching the domain
 satisfies condition 2 only — it does not publish the site.
 
+## 4b. Environment changes require a clean build
+
+Most of this site is prerendered at build time, and several pages read
+configuration while they render — the demo form's state and the indexing gate
+both do. **A redeploy that reuses the build cache can therefore serve the old
+prerendered HTML with the new environment**, so the site behaves as though the
+variable was never set.
+
+This is not hypothetical: after the demo-request variables were first added, a
+cache-reusing redeploy left `/request-demo` still rendering its inactive state
+while the API on the very same deployment reported the form as live.
+
+**The rule:** whenever a variable that affects prerendered output changes —
+`SITE_INDEXABLE`, `LEGAL_CONTENT_APPROVED`, or any `DEMO_REQUEST_*` — release
+with a **clean production build from the intended commit**, not a redeploy of an
+existing deployment.
+
+The rule is enforced, not just written down. The end-to-end test *"the rendered
+form agrees with the deployment's own configuration"* reads the deployment's own
+API and then asserts the rendered page matches it, so a stale prerender fails
+the run rather than reaching a person. Run the deployed suite against any
+release that changed one of those variables.
+
 ## 5. Pre-cutover — evidence and anchors
 
 Nothing below may be skipped: every rollback step depends on a value captured
@@ -212,7 +235,8 @@ it passes end to end.
   and `LEGAL_CONTENT_STATE` is `"approved"` in that same build. If it is not,
   stop — setting the flag will fail the build, which is the intended behaviour.
 - Set **both** `SITE_INDEXABLE=true` and `LEGAL_CONTENT_APPROVED=true` on the
-  production environment and redeploy.
+  production environment, then release with a **clean build** — see section 4b.
+  A cache-reusing redeploy can leave the old prerendered pages in place.
 - Verify: `robots.txt` allows crawling and names the sitemap; no response
   carries `X-Robots-Tag: noindex`; `sitemap.xml` lists only
   `https://www.lumensync.io` URLs; every canonical matches the page's own URL.
