@@ -190,9 +190,9 @@ test.describe("foundation smoke", () => {
     await page.goto("/");
     const footer = page.getByRole("contentinfo");
     await expect(footer).toBeVisible();
-    await footer.getByRole("link", { name: "Privacy Policy" }).click();
+    await footer.getByRole("link", { name: "Privacy", exact: true }).click();
     await expect(
-      page.getByRole("heading", { level: 1, name: /Privacy Policy/i }),
+      page.getByRole("heading", { level: 1, name: /Privacy and data handling/i }),
     ).toBeVisible();
   });
 
@@ -208,7 +208,7 @@ test.describe("foundation smoke", () => {
     const canonical = await page
       .locator('link[rel="canonical"]')
       .getAttribute("href");
-    expect(canonical).toBe("https://lumensync.io/product/checks");
+    expect(canonical).toBe("https://www.lumensync.io/product/checks");
     expect(canonical).not.toMatch(/vercel\.app/);
   });
 
@@ -222,7 +222,7 @@ test.describe("foundation smoke", () => {
     const canonical = await page
       .locator('link[rel="canonical"]')
       .getAttribute("href");
-    expect(canonical).toBe("https://lumensync.io");
+    expect(canonical).toBe("https://www.lumensync.io");
     for (const selector of [
       'meta[property="og:title"]',
       'meta[property="og:description"]',
@@ -247,7 +247,7 @@ test.describe("foundation smoke", () => {
       expect(content, selector).toBeTruthy();
       const host = new URL(content!, page.url()).host;
       expect(
-        host === "lumensync.io" ||
+        host === "www.lumensync.io" ||
           (onVercelPreview && /\.vercel\.app$/.test(host)),
         `${selector} host ${host}`,
       ).toBe(true);
@@ -281,7 +281,7 @@ test.describe("foundation smoke", () => {
     const sitemap = await page.request.get("/sitemap.xml");
     expect(sitemap.status()).toBe(200);
     const xml = await sitemap.text();
-    expect(xml).toContain("<loc>https://lumensync.io</loc>");
+    expect(xml).toContain("<loc>https://www.lumensync.io</loc>");
     expect(xml).not.toMatch(/vercel\.app/);
   });
 

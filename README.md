@@ -60,17 +60,40 @@ None required at this stage. Optional, test-only:
   that sits behind Vercel Authentication. Supply it from your shell or CI
   secrets only — never commit it.
 
-`process.env.VERCEL_ENV` and `VERCEL_PROJECT_PRODUCTION_URL` (provided by
-Vercel) are read by `app/robots.ts` so that **only the real production domain
-(`lumensync.io`) is ever indexable** — previews and the `*.vercel.app` project
-URL always serve `Disallow: /`.
+### Deployment environment variables
+
+None of these are committed, and none reach the browser.
+
+- `SITE_INDEXABLE` — set to `"true"` only on the production deployment, and only
+  after routing has been proven, to allow crawling. See `lib/indexing.ts`:
+  indexing additionally requires `VERCEL_ENV=production` and a production host
+  equal to the canonical host, so **attaching the domain does not by itself
+  publish the site to search engines**. Unsetting it withdraws the site from
+  indexing without touching DNS.
+- `DEMO_REQUEST_WEBHOOK_URL`, `DEMO_REQUEST_FORM_SECRET`,
+  `DEMO_REQUEST_WEBHOOK_TOKEN` — the demo form's delivery destination. Absent or
+  incomplete means the form stays visibly inactive and the API returns 503. See
+  [`docs/demo-request.md`](docs/demo-request.md).
+
+The canonical public host is `www.lumensync.io` (`lib/site.ts`), because the
+apex already redirects there and the protected legacy customer routes are bound
+to that hostname at the edge.
 
 ## Deployment
 
 The GitHub repository is connected to a dedicated Vercel project. Pushes to
 branches create preview deployments; nothing in this repository may attach or
 alter production DNS (`lumensync.io` / `www.lumensync.io`) — production
-cutover is governed by a separate, explicitly-authorized work item.
+cutover is governed by a separate, explicitly-authorized work item and is
+documented step by step, with its rollback, in
+[`docs/production-cutover.md`](docs/production-cutover.md).
+
+### No analytics
+
+This site carries no analytics, tag manager, pixel, session recorder or cookie
+of any kind, and makes no third-party request when a page loads. That is a
+deliberate V1 decision, it is what `/legal/privacy` states as fact, and
+`tests/no-tracking.test.ts` fails the build if it stops being true.
 
 ## Product imagery (public-repo safety)
 

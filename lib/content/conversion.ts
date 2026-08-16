@@ -3,16 +3,20 @@ import type { Hero, Point, Step } from "./types";
 /**
  * Conversion copy: /request-demo and /contact.
  *
- * The demo form has no submission backend yet. The page says so plainly and
- * never fakes success. No third-party form, CRM or email vendor is used, and no
- * personal contact details are published — see the LSWEB-006 follow-up.
+ * The demo form is live only when the deployment has a delivery destination
+ * configured (see `lib/demo-request/config.ts`). Both states are honest: when
+ * it is off, the page says so instead of accepting a message it cannot deliver;
+ * when it is on, the submitter is told the true outcome. No third-party form,
+ * CRM or analytics vendor is embedded in the page in either state.
  */
 
-/** Single source of truth for the "not yet live" state of the demo form. */
-export const DEMO_FORM_LIVE = false;
-
-export const DEMO_FORM_NOTICE =
+/** Shown on the page, and returned by the API, when delivery is unconfigured. */
+export const DEMO_FORM_UNAVAILABLE =
   "Online demo requests aren't switched on yet — this form is intentionally inactive rather than quietly dropping your message. If you're already talking to us, reply on that thread and we'll pick it up there.";
+
+/** Shown above the form when delivery is configured. */
+export const DEMO_FORM_LIVE_NOTICE =
+  "Tell us enough to make the session useful. This goes straight to the product team — no marketing sequence, no reseller, and nothing shared with a third party.";
 
 export const REQUEST_DEMO = {
   hero: {
@@ -65,12 +69,6 @@ export const REQUEST_DEMO = {
       },
     ] satisfies Point[],
   },
-  fields: [
-    { id: "name", label: "Name", autoComplete: "name", type: "text" },
-    { id: "email", label: "Work email", autoComplete: "email", type: "email" },
-    { id: "company", label: "Company", autoComplete: "organization", type: "text" },
-    { id: "role", label: "Role", autoComplete: "organization-title", type: "text" },
-  ],
 } as const;
 
 export const CONTACT = {
@@ -100,6 +98,11 @@ export const CONTACT = {
   },
   honesty: {
     label: "About this page",
-    body: "We don't publish a general enquiries inbox or phone number yet, and we'd rather point you at a route that actually gets answered than list one that doesn't. A monitored contact channel is a tracked next step for this site.",
+    /** Delivery unconfigured: the demo form cannot be offered as a route. */
+    offline:
+      "We don't publish a general enquiries inbox or phone number, and online demo requests aren't switched on yet either — we'd rather point you at a route that actually gets answered than list one that doesn't. Getting the demo request monitored is the next step for this site.",
+    /** Delivery configured: the form is the monitored route. */
+    online:
+      "We don't publish a general enquiries inbox or phone number — a published address collects more automated mail than real questions. The demo request form is the monitored route, it reaches the product team directly, and it tells you plainly whether your message got through.",
   },
 } as const;

@@ -11,8 +11,8 @@ const companyLinks = [
 ];
 
 const legalLinks = [
-  { path: "/legal/privacy", label: "Privacy Policy" },
-  { path: "/legal/terms", label: "Terms of Service" },
+  { path: "/legal/privacy", label: "Privacy" },
+  { path: "/legal/terms", label: "Terms" },
 ];
 
 function FooterColumn({

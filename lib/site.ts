@@ -9,7 +9,18 @@
  */
 
 export const SITE_NAME = "LumenSync";
-export const SITE_URL = "https://lumensync.io";
+
+/**
+ * The canonical public host.
+ *
+ * `www` rather than the apex, for two concrete reasons: the apex already
+ * permanently redirects to `www` in production, and the protected legacy
+ * customer routes are bound to the `www` hostname at the edge. Canonicalising
+ * on `www` therefore means no canonical URL points at a redirect and no
+ * existing customer bookmark has to change at cutover.
+ */
+export const CANONICAL_HOST = "www.lumensync.io";
+export const SITE_URL = `https://${CANONICAL_HOST}`;
 export const APP_URL = "https://app.lumensync.io";
 
 export const SITE_TAGLINE =
@@ -130,16 +141,16 @@ export const utilityPages: PageDef[] = [
   {
     path: "/legal/privacy",
     label: "Privacy",
-    title: "Privacy Policy",
+    title: "Privacy and Data Handling",
     description:
-      "The LumenSync privacy policy. The final policy text is being prepared and will be published here before the site goes live on its production domain.",
+      "What this website does with data: no cookies, no analytics, no third-party requests, and a demo request form that stores nothing — plus what the final policy still requires.",
   },
   {
     path: "/legal/terms",
     label: "Terms",
-    title: "Terms of Service",
+    title: "Terms and Site Use",
     description:
-      "The LumenSync terms of service. The final terms are being prepared and will be published here before the site goes live on its production domain.",
+      "What this website is — an informational site with no account, no purchase and no service delivered through it — and which terms still require review before launch.",
   },
 ];
 
