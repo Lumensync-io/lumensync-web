@@ -230,12 +230,16 @@ describe("core site routes (LSWEB-005)", () => {
       render(<Component />);
       const text = document.body.textContent ?? "";
       expect(screen.getAllByRole("heading", { level: 1 }), name).toHaveLength(1);
-      expect(text, name).toMatch(/Still to be written and approved/);
-      expect(text, name).toMatch(/reviewed by a lawyer/);
-      // No invented commitment slipped into the factual half.
-      expect(text, name).not.toMatch(/we (guarantee|promise|warrant)/i);
+      // The published version says plainly that counsel has not seen it, and
+      // keeps the outstanding items visible rather than papering over them.
+      expect(text, name).toMatch(/Still with counsel/);
+      expect(text, name).toMatch(/has not yet been reviewed by a lawyer/);
+      expect(text, name).toMatch(/Effective/);
+      // No commitment that was not actually decided.
+      expect(text, name).not.toMatch(/we (guarantee|promise|warrant)\b/i);
       expect(text, name).not.toMatch(/\bwe will never\b/i);
       expect(text, name).not.toMatch(/\b\d+\s+(days?|months?|years?)\b/i);
+      expect(text, name).not.toMatch(/governed by the laws|exclusive jurisdiction/i);
     }
   });
 

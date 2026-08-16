@@ -192,7 +192,7 @@ test.describe("foundation smoke", () => {
     await expect(footer).toBeVisible();
     await footer.getByRole("link", { name: "Privacy", exact: true }).click();
     await expect(
-      page.getByRole("heading", { level: 1, name: /Privacy and data handling/i }),
+      page.getByRole("heading", { level: 1, name: /Privacy Policy/i }),
     ).toBeVisible();
   });
 

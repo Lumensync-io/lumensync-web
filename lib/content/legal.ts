@@ -1,58 +1,61 @@
 /**
- * Legal page content.
+ * Legal page content — version 1.
  *
- * Two kinds of text live here, and they are deliberately kept apart on the
- * page:
+ * Written for LumenSync from scratch. No other company's policy text was
+ * copied, and nothing here describes a practice LumenSync does not actually
+ * follow: every statement about this website's behaviour can be checked against
+ * the code in this repository, and several are enforced by tests.
  *
- *   `disclosures` — verifiable statements about how this website actually
- *   behaves. Every line can be checked against the code in this repository or
- *   observed in the browser. Several are enforced by tests.
+ * It follows the structure a mature SaaS policy uses — what is collected, why,
+ * who else sees it, how long it is kept, what rights you have, how changes are
+ * made — because that structure is what readers and regulators expect. What it
+ * does not do is invent a retention period, a compliance certification or a
+ * jurisdiction that has not been decided. Those are listed as open items for
+ * counsel instead of being guessed at.
  *
- *   `gated` — the parts of a real policy that create legal commitments. These
- *   are listed as outstanding items, not drafted. Nothing in this repository
- *   invents a promise, a retention period, a legal basis or a jurisdiction, and
- *   no AI-drafted text is presented as reviewed policy.
- *
- * The site is not indexable and the production domain is not attached, so no
- * visitor can arrive here expecting a published policy before it exists.
+ * Published as the company's own current statement. It has not been reviewed by
+ * a lawyer, the pages say so, and `LEGAL_CONTENT_STATE` keeps the indexing gate
+ * shut until that review happens.
  */
 
-/** The date the disclosures below were last checked against the code. */
-export const LEGAL_LAST_VERIFIED = "16 August 2026";
+/** The date this version took effect and was last checked against the code. */
+export const LEGAL_EFFECTIVE_DATE = "16 August 2026";
 
-/**
- * Whether the text in this file is the counsel-approved wording.
- *
- * Flip to "approved" only in the same change that replaces the pre-approval
- * content with text an owner or counsel has actually signed off. The build
- * refuses to start if `LEGAL_CONTENT_APPROVED` is set while this still says
- * "awaiting-approval" (see `lib/indexing.ts`), so the environment flag and the
- * shipped words cannot drift apart in either direction.
- */
-export const LEGAL_CONTENT_STATE: "awaiting-approval" | "approved" =
-  "awaiting-approval";
+/** Where the public can reach LumenSync about anything on these pages. */
+export const LEGAL_CONTACT = "demo@lumensync.io";
 
 /**
- * Phrases that may appear only while the content is unapproved. A test asserts
- * they are absent once `LEGAL_CONTENT_STATE` is "approved".
+ * How far the legal content has got.
+ *
+ * "awaiting-approval"        — placeholder only, nothing publishable.
+ * "published-pending-review" — LumenSync's own v1, live, not yet seen by counsel.
+ * "approved"                 — counsel has reviewed the shipped wording.
+ *
+ * Only "approved" satisfies the indexing gate. The build fails if
+ * `LEGAL_CONTENT_APPROVED` is set while this says anything else, so the site
+ * cannot be published to search engines on the strength of a self-authored
+ * draft — see `lib/indexing.ts`.
  */
+export const LEGAL_CONTENT_STATE:
+  | "awaiting-approval"
+  | "published-pending-review"
+  | "approved" = "published-pending-review";
+
+/** Wording that must not survive counsel review. Asserted by tests. */
 export const LEGAL_PLACEHOLDER_MARKERS = [
-  "Still to be written and approved",
-  "reviewed by a lawyer",
-  "Not yet an approved policy",
-  "Not yet approved terms",
+  "has not yet been reviewed by a lawyer",
+  "Still with counsel",
 ] as const;
 
-/** Heading of the section the demo-form state note attaches to. */
-export const DEMO_FORM_SECTION = "The demo request form";
+/** The section the demo-form state note attaches to on the privacy page. */
+export const DEMO_FORM_SECTION = "What we collect";
 
-/** Shown on the privacy page while the form has no delivery destination. */
+/** Shown while a deployment has no delivery destination configured. */
 export const DEMO_FORM_OFF_NOTE =
-  "Right now the form is switched off, so no submission can be made and none is being received. What follows describes what happens once it is enabled.";
+  "On this deployment the demo request form is switched off, so no submission can be made and none is being received. What follows describes what happens when it is enabled.";
 
 export interface LegalSection {
   heading: string;
-  lead?: string;
   items: string[];
 }
 
@@ -60,104 +63,155 @@ export interface LegalPage {
   eyebrow: string;
   heading: string;
   lead: string;
-  gate: { label: string; body: string };
-  disclosureIntro: string;
-  disclosures: LegalSection[];
-  gatedIntro: string;
-  gated: string[];
+  notice: { label: string; body: string };
+  sections: LegalSection[];
+  openItemsIntro: string;
+  openItems: string[];
 }
+
+const REVIEW_NOTICE = {
+  label: "Version 1 — still with counsel",
+  body: `This is LumenSync's own account of how the site behaves, published so that anyone can see it rather than waiting for a lawyer's diary. It has not yet been reviewed by a lawyer. A review is booked; when it happens this page may change and the effective date below will change with it.`,
+};
 
 export const PRIVACY: LegalPage = {
   eyebrow: "Legal",
-  heading: "Privacy and data handling",
-  lead: "This page has two halves. The first describes exactly what this website does with data today and is accurate as written. The second lists what a finished privacy policy still needs — the parts that commit LumenSync to something, which will be published only once they have been reviewed.",
-  gate: {
-    label: "Not yet an approved policy",
-    body: "The technical disclosures below are factual and current. They are not a substitute for a privacy policy, and nothing here has been reviewed by a lawyer. The final policy will be published before this site is reachable on its public domain.",
-  },
-  disclosureIntro: `How this website behaves, verified against the code on ${LEGAL_LAST_VERIFIED}.`,
-  disclosures: [
+  heading: "Privacy Policy",
+  lead: "What this website does with personal information, in plain terms. It covers this website only — the LumenSync application at app.lumensync.io is a separate system, and how it handles your project data is governed by the agreement covering it.",
+  notice: REVIEW_NOTICE,
+  sections: [
     {
-      heading: "No tracking of any kind",
+      heading: "Who this covers",
       items: [
-        "This site sets no cookies. There is no session cookie, no preference cookie and no consent banner, because there is nothing to consent to.",
-        "There is no analytics product, tag manager, advertising pixel, social widget, session recorder or A/B testing tool on any page.",
-        "Nothing is written to local storage or session storage.",
-        "No visitor profile is built, and nothing about a visit is shared with a third party for marketing.",
+        "This policy applies to the LumenSync marketing website and every page served under it.",
+        "It does not cover the LumenSync application. Signing in there is a different relationship with different terms.",
+        `LumenSync is responsible for the information described here. You can reach us at ${LEGAL_CONTACT}.`,
       ],
     },
     {
-      heading: "No third-party requests when a page loads",
+      heading: "What we collect",
       items: [
-        "Every asset — styles, scripts, fonts and images — is served from this site's own domain. Fonts are self-hosted at build time rather than fetched from a font provider.",
-        "Links to the LumenSync application at app.lumensync.io are ordinary links. Nothing is sent there until a visitor chooses to follow one, and the application is a separate system with its own handling of data.",
+        "If you submit the demo request form: your name, work email, company, an optional role, and an optional message about what you would like to see.",
+        "Automatically, as any website does: our hosting provider records the connection details needed to serve a page — IP address, browser user-agent, the URL requested, and the time of the request.",
+        "Nothing else. There is no account to create, nothing to buy, and no other form on the site.",
       ],
     },
     {
-      heading: "What the host necessarily sees",
+      heading: "What we do not do",
       items: [
-        "The site is served by its hosting provider, which — like any web host — processes the connection details needed to deliver a page: IP address, browser user-agent, the URL requested, and the time of the request. These appear in the provider's operational logs.",
-        "This is required to serve the site at all. It is not used to build a profile, and LumenSync does not combine it with anything else.",
+        "We set no cookies. There is no consent banner because there is nothing to consent to.",
+        "We use no analytics product, tag manager, advertising pixel, social widget or session recorder.",
+        "We write nothing to your browser's local or session storage.",
+        "Every asset — styles, scripts, fonts and images — is served from our own domain, so loading a page makes no request to a third party.",
+        "We do not sell personal information, share it for advertising, or build a profile of you.",
       ],
     },
     {
-      heading: "The demo request form",
-      lead: "The only place this site accepts personal data, and only if a person chooses to submit it. What follows describes exactly what happens to a submission.",
+      heading: "How we use what you send",
       items: [
-        "The fields are: name, work email, company, an optional role, and an optional message describing what you would like to see.",
-        "A submission is validated and forwarded once to the destination LumenSync uses to receive demo requests. The website itself has no database and stores no submission.",
-        "The outcome shown to you is the real outcome. If the request cannot be delivered, you are told it was not received rather than shown a success message.",
-        "One log line is written per submission: the time, the outcome, a short reference, and a one-way digest of the email address so repeat submissions can be recognised. The address itself, your name, your company and your message are not written to the log.",
-        "Automated submissions are filtered with a decoy field and a signed timestamp, and repeated submissions are limited by a short-lived counter keyed to a hash of the connection address. None of this uses a cookie, a third-party bot service or any form of fingerprinting, and no raw address is retained.",
-        "Submitting the form is the only way this website receives your details. Nothing on any other page collects them.",
+        "A demo request is used to reply to you and to arrange a demonstration. That is its only purpose.",
+        "You are not added to a marketing list or an automated email sequence.",
+        "The connection details our host records are used to serve the site, keep it available, and investigate abuse.",
       ],
     },
     {
-      heading: "Separation from the application",
+      heading: "Who else can see it",
       items: [
-        "This marketing website and the LumenSync application are different systems on different infrastructure. This site has no connection to the application's data.",
-        "Product screenshots on this site come from a vendor-owned demonstration project containing synthetic data. No customer project, drawing, document or name appears anywhere on this site.",
-        "If you use the LumenSync application, how that application handles your project data is governed by your agreement for it, not by this page.",
+        "Vercel hosts this website and processes connection details in the course of serving it.",
+        "Microsoft receives a submitted demo request through our own endpoint on Azure and holds it in a LumenSync mailbox on Microsoft 365.",
+        "No one else. We use no CRM, no marketing platform, no third-party form service and no data broker.",
+      ],
+    },
+    {
+      heading: "How long we keep it",
+      items: [
+        "The website itself stores nothing. A demo request is validated, forwarded once, and not retained by the site.",
+        "A submitted request stays in the LumenSync mailbox while we deal with your enquiry and afterwards as a record of it. We have not yet fixed a formal retention period; when we set one we will publish it here.",
+        "Connection details follow our hosting provider's own log retention.",
+        "We write one line per submission on our side: the time, the outcome, a short reference, and a one-way digest of the email address so repeat submissions can be recognised. Your name, your address, your company and your message are not written to that log.",
+      ],
+    },
+    {
+      heading: "Where it is processed",
+      items: [
+        "The website, the intake endpoint and the mailbox are all operated in the United States.",
+      ],
+    },
+    {
+      heading: "Your choices and your rights",
+      items: [
+        `You can ask what we hold about you, ask us to correct it, or ask us to delete it. Write to ${LEGAL_CONTACT} and a person will answer.`,
+        "Depending on where you live, local law may give you further rights. We will honour what we are required to honour, and if we cannot do something we will tell you plainly why.",
+        "The simplest control of all: unless you have submitted the form, we hold nothing about you beyond the connection details our host records in order to serve the page.",
+      ],
+    },
+    {
+      heading: "Security",
+      items: [
+        "Submissions travel over HTTPS, the endpoint that receives them requires an authenticated request, and the mailbox they arrive in is restricted to named people.",
+        "No system is perfectly secure and we do not claim otherwise. The security page sets out exactly what LumenSync does and does not claim.",
+      ],
+    },
+    {
+      heading: "Children",
+      items: [
+        "This site is aimed at people working in commercial construction and electrical contracting. It is not directed at children, and we do not knowingly collect information from them.",
+      ],
+    },
+    {
+      heading: "Changes to this policy",
+      items: [
+        `This version took effect on ${LEGAL_EFFECTIVE_DATE}. If we change it, the date changes with it.`,
+        "A material change will be described here rather than made quietly.",
       ],
     },
   ],
-  gatedIntro:
-    "What a finished policy still needs. Each item creates an obligation, so each is a decision for the business and its counsel rather than something to be drafted here.",
-  gated: [
-    "The identity and registered details of the entity acting as data controller, and the address to write to.",
-    "The stated purpose and lawful basis for handling demo requests.",
-    "How long a demo request is kept at its destination, who inside the business can see it, and when it is deleted.",
-    "How a person asks for a copy of their data, corrects it, or has it deleted — including the route to make that request and the response time committed to.",
-    "Which privacy regimes are being addressed (for example UK/EU GDPR or US state privacy laws), and the rights described under each.",
-    "The list of processors and sub-processors, and the position on any transfer of data between countries.",
-    "The effective date, the versioning approach, and how a material change is communicated.",
-    "Legal review and sign-off of the final wording before publication.",
+  openItemsIntro:
+    "Being straight about what a lawyer still needs to settle. None of it changes how the site behaves today; each item is a commitment that should be made deliberately rather than drafted in a hurry.",
+  openItems: [
+    "The formal legal entity acting as data controller, and its registered address.",
+    "How long a demo request is kept once the enquiry is closed, and who inside the business can read it.",
+    "Which privacy regimes to address explicitly, the statutory rights to enumerate under each, and the response time to commit to.",
+    "Whether a data processing agreement is required with any processor named above.",
+    "How this policy relates to the separate policy covering the LumenSync application.",
   ],
 };
 
 export const TERMS: LegalPage = {
   eyebrow: "Legal",
-  heading: "Terms and site use",
-  lead: "The same split as the privacy page: what this website factually is, followed by the terms that still require review. Using the LumenSync application is governed by a separate agreement — this page is about the website you are reading.",
-  gate: {
-    label: "Not yet approved terms",
-    body: "The description below is accurate. It is not a contract, and no term on this page has been reviewed by a lawyer. Final terms will be published before this site is reachable on its public domain.",
-  },
-  disclosureIntro: `What this website is, verified against the code on ${LEGAL_LAST_VERIFIED}.`,
-  disclosures: [
+  heading: "Terms of Service",
+  lead: "The terms for using this website. Using the LumenSync application is governed by a separate agreement — nothing on this site grants access to it, and nothing here overrides it.",
+  notice: REVIEW_NOTICE,
+  sections: [
     {
-      heading: "An informational website",
+      heading: "What this site is",
       items: [
-        "These pages describe the LumenSync product. There is no account to create here, nothing to buy, and no service delivered through this site.",
-        "The only interactive element is the demo request form, which starts a conversation and nothing more. Submitting it does not create an agreement, a trial, or an obligation on either side.",
+        "An informational website describing the LumenSync product. There is no account to create, nothing to purchase, and no service delivered through it.",
+        "The only interactive element is the demo request form. Submitting it starts a conversation and nothing more — it does not create a contract, a trial, or an obligation on either side.",
+      ],
+    },
+    {
+      heading: "Using the site",
+      items: [
+        "You are welcome to read these pages, link to them, and share them.",
+        "Please do not attempt to break, overload or gain unauthorised access to this site or the systems behind it; scrape it at a volume that degrades it for others; or use the demo form to send unsolicited commercial messages, malicious content or anything unlawful.",
+        "We may block access that does any of those things.",
       ],
     },
     {
       heading: "What the content is, and is not",
       items: [
         "Product descriptions reflect the product as built at the time of writing. Software changes, and a description on a marketing page is not a specification or a warranty.",
-        "Where the product's limits are relevant, this site states them rather than omitting them — including which certifications LumenSync does not hold.",
+        "Where the product's limits are relevant this site states them, including which certifications LumenSync does not hold.",
         "No pricing, service level, availability commitment or delivery date is offered anywhere on this site.",
+      ],
+    },
+    {
+      heading: "Ownership",
+      items: [
+        "The LumenSync name, the product interface shown in screenshots, and the text and design of this site belong to their owner.",
+        "Any other product or company name used on this site is used only to describe the work LumenSync supports, and belongs to its respective owner.",
+        "Nothing here grants you a licence beyond reading and sharing these pages.",
       ],
     },
     {
@@ -168,23 +222,32 @@ export const TERMS: LegalPage = {
       ],
     },
     {
-      heading: "Ownership",
+      heading: "No warranty",
       items: [
-        "The LumenSync name, the product interface shown in screenshots, and the text and design of this site belong to their owner.",
-        "Any other product or company name used on this site is used only to describe the work LumenSync supports, and belongs to its respective owner.",
+        "This website is provided as it is. To the fullest extent the law allows, we make no warranty that it will be uninterrupted, error-free, or fit for any particular purpose.",
+      ],
+    },
+    {
+      heading: "Limitation of liability",
+      items: [
+        "To the fullest extent the law allows, LumenSync is not liable for indirect, incidental or consequential loss arising from your use of this website.",
+        "Nothing in these terms limits any liability that cannot lawfully be limited.",
+      ],
+    },
+    {
+      heading: "Changes to these terms",
+      items: [
+        `This version took effect on ${LEGAL_EFFECTIVE_DATE}. If we change it, the date changes with it.`,
       ],
     },
   ],
-  gatedIntro:
-    "What finished terms still need. Each item is a commitment or a limitation of liability, so each requires review before it is published.",
-  gated: [
+  openItemsIntro:
+    "What a lawyer still needs to settle. Each of these is a commitment or a limitation, and each is better decided than assumed.",
+  openItems: [
     "The contracting entity, and how acceptance of these terms is established.",
-    "Permitted use of the site and its content, and the restrictions that go with it.",
-    "The intellectual property licence granted to a visitor, and its limits.",
-    "Disclaimers, the warranty position, and the limitation of liability.",
-    "Governing law and the venue for a dispute.",
-    "How the terms may change, and what notice is given.",
-    "How these terms relate to the separate agreement covering the application.",
-    "Legal review and sign-off of the final wording before publication.",
+    "Governing law and the venue for a dispute — deliberately not asserted here rather than guessed.",
+    "Whether the limitation of liability above is the right one for that jurisdiction.",
+    "Any consumer-protection wording required where visitors are located.",
+    "How these terms interact with the agreement covering the LumenSync application.",
   ],
 };
