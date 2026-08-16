@@ -195,12 +195,12 @@ test.describe("launch readiness", () => {
       await page.goto(path);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
       await expect(
-        page.getByRole("heading", { name: /How this site actually works/i }),
+        page.getByText(/Effective 16 August 2026/i).first(),
       ).toBeVisible();
       await expect(
-        page.getByRole("heading", { name: /Still to be written and approved/i }),
+        page.getByRole("heading", { name: /Still with counsel/i }),
       ).toBeVisible();
-      await expect(page.getByText(/reviewed by a lawyer/i).first()).toBeVisible();
+      await expect(page.getByText(/has not yet been reviewed by a lawyer/i).first()).toBeVisible();
     }
   });
 });

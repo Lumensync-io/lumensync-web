@@ -1,10 +1,6 @@
 import { LegalPageBody } from "@/components/marketing/legal-page";
 import { pageMetadata } from "@/components/page-scaffold";
-import {
-  DEMO_FORM_OFF_NOTE,
-  DEMO_FORM_SECTION,
-  PRIVACY,
-} from "@/lib/content/legal";
+import { DEMO_FORM_OFF_NOTE, DEMO_FORM_SECTION, PRIVACY } from "@/lib/content/legal";
 import { isDemoRequestEnabled } from "@/lib/demo-request/config";
 import { assertLegalContentMatchesFlag } from "@/lib/indexing";
 

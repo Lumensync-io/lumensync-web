@@ -7,12 +7,14 @@ import {
   Section,
   TextLink,
 } from "@/components/primitives";
-import type { LegalPage } from "@/lib/content/legal";
+import { LEGAL_EFFECTIVE_DATE, type LegalPage } from "@/lib/content/legal";
 
 /**
- * Shared layout for the legal pages. The factual disclosures and the items
- * awaiting legal approval are rendered as two visually distinct blocks so a
- * reader can never mistake an outstanding item for a published commitment.
+ * Shared layout for the legal pages: the policy itself, then a visible list of
+ * what a lawyer still has to settle. Keeping the second block on the page — and
+ * distinct from the first — is deliberate. A reader can see exactly which parts
+ * are settled and which are not, instead of a confident document quietly
+ * papering over the gaps.
  */
 export function LegalPageBody({
   page,
@@ -31,31 +33,30 @@ export function LegalPageBody({
             <span id="page-heading">
               <DisplayHeading>{page.heading}</DisplayHeading>
             </span>
+            <p className="mt-4 text-sm text-ink-muted">
+              Effective {LEGAL_EFFECTIVE_DATE}
+            </p>
             <BodyCopy className="mt-6">{page.lead}</BodyCopy>
-            <Callout label={page.gate.label} className="mt-8">
-              {page.gate.body}
+            <Callout label={page.notice.label} className="mt-8">
+              {page.notice.body}
             </Callout>
           </div>
         </Container>
       </Section>
 
       <Section
-        id="disclosures"
-        aria-labelledby="disclosures-heading"
+        id="policy"
+        aria-labelledby="policy-heading"
         className="border-t border-line-subtle bg-surface-inset"
       >
         <Container>
           <div className="max-w-3xl">
-            <h2
-              id="disclosures-heading"
-              className="text-2xl font-bold tracking-tight text-ink-strong"
-            >
-              How this site actually works
+            <h2 id="policy-heading" className="sr-only">
+              {page.heading}
             </h2>
-            <p className="mt-3 text-sm text-ink-muted">{page.disclosureIntro}</p>
 
-            <div className="mt-10 grid gap-10">
-              {page.disclosures.map((section) => (
+            <div className="grid gap-10">
+              {page.sections.map((section) => (
                 <section key={section.heading} aria-label={section.heading}>
                   <h3 className="text-lg font-semibold text-ink-strong">
                     {section.heading}
@@ -63,11 +64,6 @@ export function LegalPageBody({
                   {sectionNotes[section.heading] ? (
                     <p className="mt-3 rounded-[var(--radius-control)] border border-line-strong bg-surface-raised p-3 text-sm leading-relaxed text-ink-body">
                       {sectionNotes[section.heading]}
-                    </p>
-                  ) : null}
-                  {section.lead ? (
-                    <p className="mt-2 text-base leading-relaxed text-ink-body">
-                      {section.lead}
                     </p>
                   ) : null}
                   <ul className="mt-4 grid gap-3 border-l border-line-strong pl-5">
@@ -87,20 +83,20 @@ export function LegalPageBody({
         </Container>
       </Section>
 
-      <Section id="pending" aria-labelledby="pending-heading">
+      <Section id="open-items" aria-labelledby="open-items-heading">
         <Container>
           <div className="max-w-3xl">
             <h2
-              id="pending-heading"
+              id="open-items-heading"
               className="text-2xl font-bold tracking-tight text-ink-strong"
             >
-              Still to be written and approved
+              Still with counsel
             </h2>
             <p className="mt-3 text-base leading-relaxed text-ink-body">
-              {page.gatedIntro}
+              {page.openItemsIntro}
             </p>
             <ol className="mt-6 grid gap-3">
-              {page.gated.map((item, index) => (
+              {page.openItems.map((item, index) => (
                 <li key={item} className="flex gap-3">
                   <span
                     aria-hidden="true"
@@ -115,8 +111,8 @@ export function LegalPageBody({
               ))}
             </ol>
             <p className="mt-8 text-sm leading-relaxed text-ink-muted">
-              Questions about any of this before it is finished can go through
-              the <TextLink href="/request-demo">demo request</TextLink>, and the{" "}
+              Questions about any of this can go through the{" "}
+              <TextLink href="/request-demo">demo request</TextLink>, and the{" "}
               <TextLink href="/security">security page</TextLink> covers what is
               and is not claimed about the product.
             </p>

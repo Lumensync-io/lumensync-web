@@ -85,10 +85,12 @@ export function assertLegalContentMatchesFlag(
 ): void {
   if (isLegalContentApproved(env) && LEGAL_CONTENT_STATE !== "approved") {
     throw new Error(
-      "LEGAL_CONTENT_APPROVED is set, but this build still contains " +
-        "pre-approval legal content. Ship the counsel-approved Privacy and " +
-        "Terms text and set LEGAL_CONTENT_STATE to \"approved\" before " +
-        "setting this variable.",
+      `LEGAL_CONTENT_APPROVED is set, but this build ships legal content in ` +
+        `state "${LEGAL_CONTENT_STATE}". The published v1 is LumenSync's own ` +
+        `wording and has not been through counsel, so it must not make the ` +
+        `site indexable. Ship the counsel-reviewed text and set ` +
+        `LEGAL_CONTENT_STATE to "approved" in the same change before setting ` +
+        `this variable.`,
     );
   }
 }

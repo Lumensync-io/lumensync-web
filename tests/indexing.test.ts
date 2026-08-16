@@ -8,13 +8,28 @@ import {
   isLegalContentApproved,
 } from "@/lib/indexing";
 import {
+  LEGAL_CONTACT,
   LEGAL_CONTENT_STATE,
   LEGAL_PLACEHOLDER_MARKERS,
   PRIVACY,
   TERMS,
 } from "@/lib/content/legal";
+
 import { CANONICAL_HOST, SITE_URL, allPages } from "@/lib/site";
 import { findForbiddenContent } from "./forbidden-terms";
+/** Every word rendered on both legal pages. */
+function legalText(): string {
+  return [PRIVACY, TERMS]
+    .flatMap((page) => [
+      page.lead,
+      page.notice.label,
+      page.notice.body,
+      page.openItemsIntro,
+      ...page.openItems,
+      ...page.sections.flatMap((s) => [s.heading, ...s.items]),
+    ])
+    .join(" ");
+}
 
 const PRODUCTION = { VERCEL_ENV: "production" };
 const HOST = { VERCEL_PROJECT_PRODUCTION_URL: CANONICAL_HOST };
@@ -93,9 +108,9 @@ describe("legal approval cannot drift from the shipped words", () => {
     expect(isLegalContentApproved({})).toBe(false);
   });
 
-  it("refuses to build when the flag is set but the text is pre-approval", () => {
+  it("refuses to build when the flag is set but counsel has not reviewed the text", () => {
     expect(() => assertLegalContentMatchesFlag({ LEGAL_CONTENT_APPROVED: "true" })).toThrow(
-      /still contains pre-approval legal content/i,
+      /LEGAL_CONTENT_STATE to "approved"/i,
     );
   });
 
@@ -103,35 +118,42 @@ describe("legal approval cannot drift from the shipped words", () => {
     expect(() => assertLegalContentMatchesFlag({})).not.toThrow();
   });
 
-  it("keeps placeholder wording only while the content is unapproved", () => {
-    const text = [PRIVACY, TERMS]
-      .flatMap((page) => [
-        page.lead,
-        page.gate.label,
-        page.gate.body,
-        page.gatedIntro,
-        ...page.gated,
-        ...page.disclosures.flatMap((s) => [s.heading, s.lead ?? "", ...s.items]),
-      ])
-      .join(" ");
+  it("labels the published version as un-reviewed until counsel signs it off", () => {
+    const text = legalText();
 
     if (LEGAL_CONTENT_STATE === "approved") {
       for (const marker of LEGAL_PLACEHOLDER_MARKERS) {
         expect(text, marker).not.toContain(marker);
       }
     } else {
-      // Unapproved content must be unmistakably labelled as such.
-      expect(text).toContain("reviewed by a lawyer");
+      // A self-authored version must say so, unmistakably, on the page itself.
+      expect(text).toContain("has not yet been reviewed by a lawyer");
+      expect(PRIVACY.openItems.length, "privacy open items").toBeGreaterThan(0);
+      expect(TERMS.openItems.length, "terms open items").toBeGreaterThan(0);
     }
   });
 
-  it("states no retention period, jurisdiction or promise in the factual half", () => {
-    const factual = [PRIVACY, TERMS]
-      .flatMap((page) => page.disclosures.flatMap((s) => [s.lead ?? "", ...s.items]))
+  it("asserts no retention period, jurisdiction or certification it has not earned", () => {
+    const body = [PRIVACY, TERMS]
+      .flatMap((page) => page.sections.flatMap((s) => s.items))
       .join(" ");
-    expect(factual).not.toMatch(/we (guarantee|promise|warrant)/i);
-    expect(factual).not.toMatch(/\b\d+\s+(days?|months?|years?)\b/i);
-    expect(factual).not.toMatch(/GDPR|CCPA|governed by the laws/i);
+    // A borrowed policy would carry all of these. Ours must not, because none
+    // of them has actually been decided.
+    expect(body).not.toMatch(/\b\d+\s+(days?|months?|years?)\b/i);
+    expect(body).not.toMatch(/governed by the laws|exclusive jurisdiction/i);
+    expect(body).not.toMatch(/SOC\s?2|ISO\s?27001|HIPAA|FedRAMP|\bPCI\b/);
+    expect(body).not.toMatch(/\bGDPR\b|\bCCPA\b/);
+    expect(body).not.toMatch(/we (guarantee|promise|warrant)\b/i);
+  });
+
+  it("commits only to things the site verifiably does", () => {
+    const privacy = PRIVACY.sections.flatMap((s) => s.items).join(" ");
+    // These are enforced elsewhere by tests, so the policy may state them.
+    expect(privacy).toMatch(/set no cookies/i);
+    expect(privacy).toMatch(/no analytics/i);
+    expect(privacy).toMatch(/served from our own domain/i);
+    // And it must name a real, monitored way to exercise a right.
+    expect(privacy).toContain(LEGAL_CONTACT);
   });
 });
 

@@ -141,16 +141,16 @@ export const utilityPages: PageDef[] = [
   {
     path: "/legal/privacy",
     label: "Privacy",
-    title: "Privacy and Data Handling",
+    title: "Privacy Policy",
     description:
-      "What this website does with data: no cookies, no analytics, no third-party requests, and a demo request form that stores nothing — plus what the final policy still requires.",
+      "What the LumenSync website does with personal information: no cookies, no analytics, no third-party requests, and a demo request form the site never stores.",
   },
   {
     path: "/legal/terms",
     label: "Terms",
-    title: "Terms and Site Use",
+    title: "Terms of Service",
     description:
-      "What this website is — an informational site with no account, no purchase and no service delivered through it — and which terms still require review before launch.",
+      "The terms for using the LumenSync website: an informational site with no account, no purchase and no service delivered through it. The application is governed separately.",
   },
 ];
 
