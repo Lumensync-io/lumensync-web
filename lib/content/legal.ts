@@ -18,7 +18,37 @@
  */
 
 /** The date the disclosures below were last checked against the code. */
-export const LEGAL_LAST_VERIFIED = "15 August 2026";
+export const LEGAL_LAST_VERIFIED = "16 August 2026";
+
+/**
+ * Whether the text in this file is the counsel-approved wording.
+ *
+ * Flip to "approved" only in the same change that replaces the pre-approval
+ * content with text an owner or counsel has actually signed off. The build
+ * refuses to start if `LEGAL_CONTENT_APPROVED` is set while this still says
+ * "awaiting-approval" (see `lib/indexing.ts`), so the environment flag and the
+ * shipped words cannot drift apart in either direction.
+ */
+export const LEGAL_CONTENT_STATE: "awaiting-approval" | "approved" =
+  "awaiting-approval";
+
+/**
+ * Phrases that may appear only while the content is unapproved. A test asserts
+ * they are absent once `LEGAL_CONTENT_STATE` is "approved".
+ */
+export const LEGAL_PLACEHOLDER_MARKERS = [
+  "Still to be written and approved",
+  "reviewed by a lawyer",
+  "Not yet an approved policy",
+  "Not yet approved terms",
+] as const;
+
+/** Heading of the section the demo-form state note attaches to. */
+export const DEMO_FORM_SECTION = "The demo request form";
+
+/** Shown on the privacy page while the form has no delivery destination. */
+export const DEMO_FORM_OFF_NOTE =
+  "Right now the form is switched off, so no submission can be made and none is being received. What follows describes what happens once it is enabled.";
 
 export interface LegalSection {
   heading: string;
@@ -72,7 +102,7 @@ export const PRIVACY: LegalPage = {
     },
     {
       heading: "The demo request form",
-      lead: "This is the only place the site accepts personal data, and only if a person chooses to submit it.",
+      lead: "The only place this site accepts personal data, and only if a person chooses to submit it. What follows describes exactly what happens to a submission.",
       items: [
         "The fields are: name, work email, company, an optional role, and an optional message describing what you would like to see.",
         "A submission is validated and forwarded once to the destination LumenSync uses to receive demo requests. The website itself has no database and stores no submission.",

@@ -22,21 +22,33 @@ has never received a real submission is not a verified destination.
 To switch it off again: remove the variables and redeploy. The page returns to
 the inactive state and the endpoint returns 503.
 
-## Choosing a destination
+## The chosen destination
 
-The website posts JSON to one URL. It does not care what is on the other end,
-which is the point — no vendor is baked into the code and no account is assumed.
-Any of these satisfies it: a workflow endpoint in a tool the business already
-pays for, a small function the business runs itself, a shared mailbox behind an
-automation, or a ticket queue.
+The owner's decision: a **LumenSync-controlled Azure webhook or function** that
+forwards each submission to a **dedicated LumenSync demo-request mailbox**. No
+third-party form vendor. The website needs no code change for this — it posts
+JSON to one URL with an optional bearer token, which is exactly what a function
+endpoint provides.
 
-What matters when choosing:
+What still has to exist before the form can be switched on:
 
-- It must accept an unauthenticated-but-token-bearing POST from Vercel.
-- It must be monitored by a person. The site tells submitters a person reads
-  these; that has to be true.
-- Its retention and access rules become the answers the privacy page still
-  needs, so pick with those in mind.
+1. **The mailbox.** A dedicated LumenSync address, monitored by a person. As of
+   this writing no such mailbox exists, so nothing can be switched on yet.
+2. **The function.** A narrowly scoped endpoint that accepts the payload below,
+   checks the bearer token, and sends the contents to that mailbox. It needs no
+   database, no customer data and no application credentials — it should be able
+   to do nothing except deliver one message.
+3. **Its send permission.** Sending mail from a function requires a deliberate
+   grant, and a tenant-wide mail-sending permission is a security decision for
+   whoever administers the tenant — not something to enable in passing. Prefer
+   the narrowest option available: a single mailbox-scoped grant over a
+   directory-wide one.
+4. **A named backup monitor.** One person is a single point of failure for
+   every inbound lead. This is a launch requirement, not a nicety.
+
+Whatever is chosen inherits the answers the privacy page still owes — how long a
+request is kept, who can read it, and how someone asks for it to be deleted — so
+decide those at the same time.
 
 ## Payload
 
