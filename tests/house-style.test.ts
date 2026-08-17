@@ -3,6 +3,7 @@ import * as company from "@/lib/content/company";
 import * as conversion from "@/lib/content/conversion";
 import * as product from "@/lib/content/product";
 import * as homepage from "@/lib/homepage-content";
+import { metadata as homeMetadata } from "@/app/page";
 import { SITE_DESCRIPTION, SITE_TITLE, allPages } from "@/lib/site";
 
 /**
@@ -74,6 +75,17 @@ describe("house style — American English on the public marketing site", () => 
 describe("homepage metadata stays inside search-result limits", () => {
   it("title is at most 60 characters", () => {
     expect(SITE_TITLE.length).toBeLessThanOrEqual(60);
+  });
+
+  it("the homepage actually renders that title, not the long tagline one", () => {
+    // The homepage sets an ABSOLUTE title, so it overrides the layout default
+    // instead of inheriting it. Shortening the layout title alone silently left
+    // the 68-character version live in production — this is the guard for that.
+    const absolute = (homeMetadata.title as { absolute?: string } | undefined)
+      ?.absolute;
+    expect(absolute).toBe(SITE_TITLE);
+    expect(String(absolute).length).toBeLessThanOrEqual(60);
+    expect(String(homeMetadata.description).length).toBeLessThanOrEqual(160);
   });
 
   it("description is at most 160 characters", () => {
