@@ -216,9 +216,16 @@ test.describe("foundation smoke", () => {
     page,
   }) => {
     await page.goto("/");
+    // The title deliberately no longer repeats the full approved headline: at
+    // 68 characters that was truncated in search results. The headline itself
+    // is unchanged and still the H1 — asserted by "renders the approved
+    // headline" above. Here we hold the title to the shortened form AND to the
+    // length budget, which the previous exact-match assertion did not check.
     await expect(page).toHaveTitle(
-      "LumenSync — Complex Lighting Installs, Finally Tied to the Drawings.",
+      "LumenSync — Lighting Coordination Tied to the Drawings",
     );
+    const title = await page.title();
+    expect(title.length, `homepage title is ${title.length} chars`).toBeLessThanOrEqual(60);
     const canonical = await page
       .locator('link[rel="canonical"]')
       .getAttribute("href");

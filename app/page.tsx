@@ -26,16 +26,30 @@ import {
   WORKFLOW,
 } from "@/lib/homepage-content";
 import { PRODUCT_MEDIA_SOURCE, productMedia } from "@/lib/product-media";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/lib/site";
+import { SITE_OG_IMAGE } from "@/components/page-scaffold";
 
+/**
+ * The homepage sets an absolute title, so it overrides the layout default
+ * rather than inheriting it — which is why shortening the layout title alone
+ * left the 68-character version live. Both now come from `SITE_TITLE`.
+ * `SITE_TAGLINE` is untouched and still supplies the approved on-page H1.
+ */
 export const metadata: Metadata = {
-  title: { absolute: `${SITE_NAME} — ${SITE_TAGLINE}` },
+  title: { absolute: SITE_TITLE },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
     url: "/",
-    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
   },
 };
 
