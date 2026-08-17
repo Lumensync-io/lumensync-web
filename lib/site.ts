@@ -112,7 +112,7 @@ export const primaryNav: PageDef[] = [
     label: "Security",
     title: "Security",
     description:
-      "How LumenSync handles access, tenant boundaries, server-side authorisation, environment separation and gated releases — and which certifications we do not claim.",
+      "Learn how LumenSync approaches authenticated access, project-scoped authorization, protected project information, and controlled software releases.",
   },
   {
     path: "/about",

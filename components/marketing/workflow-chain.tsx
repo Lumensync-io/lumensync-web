@@ -12,14 +12,18 @@ export interface WorkflowStep {
 export function WorkflowChain({
   steps,
   ariaLabel,
+  columns = 7,
 }: {
-  steps: WorkflowStep[];
+  steps: readonly WorkflowStep[];
   ariaLabel: string;
+  /** Large-screen column count. Static class strings, so Tailwind keeps them. */
+  columns?: 5 | 7;
 }) {
+  const cols = columns === 5 ? "lg:grid-cols-5" : "lg:grid-cols-7";
   return (
     <ol
       aria-label={ariaLabel}
-      className="grid gap-3 sm:grid-cols-2 lg:grid-cols-7 lg:gap-2"
+      className={`grid gap-3 sm:grid-cols-2 ${cols} lg:gap-2`}
     >
       {steps.map((step, i) => (
         <li key={step.label} className="relative flex lg:flex-col">
