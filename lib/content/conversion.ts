@@ -1,4 +1,4 @@
-﻿import type { Hero, Point, Step } from "./types";
+import type { Hero, Point, Step } from "./types";
 
 /**
  * Conversion copy: /request-demo and /contact.
@@ -12,17 +12,17 @@
 
 /** Shown on the page, and returned by the API, when delivery is unconfigured. */
 export const DEMO_FORM_UNAVAILABLE =
-  "Online demo requests aren't switched on yet â€” this form is intentionally inactive rather than quietly dropping your message. If you're already talking to us, reply on that thread and we'll pick it up there.";
+  "Online demo requests aren't switched on yet — this form is intentionally inactive rather than quietly dropping your message. If you're already talking to us, reply on that thread and we'll pick it up there.";
 
 /** Shown above the form when delivery is configured. */
 export const DEMO_FORM_LIVE_NOTICE =
-  "Tell us enough to make the session useful. This goes straight to the product team â€” no marketing sequence, no reseller, and nothing shared with a third party.";
+  "Tell us enough to make the session useful. This goes straight to the product team — no marketing sequence, no reseller, and nothing shared with a third party.";
 
 export const REQUEST_DEMO = {
   hero: {
     eyebrow: "Request a demo",
     heading: "See LumenSync on a lighting package like yours.",
-    lead: "A demo is a working session, not a slide deck. We walk a real commercial lighting package through the product â€” schedule, drawings, checks, findings, RFIs and field status â€” and you tell us where it would have caught something on your last job.",
+    lead: "A demo is a working session, not a slide deck. We walk a real commercial lighting package through the product — schedule, drawings, checks, findings, RFIs and field status — and you tell us where it would have caught something on your last job.",
     note: "Best suited to electrical contractors, project managers and lighting-coordination teams running complex commercial work.",
   } satisfies Hero,
   agenda: {
@@ -39,7 +39,7 @@ export const REQUEST_DEMO = {
       },
       {
         label: "The checks",
-        detail: "Running a coordination check and reading the findings â€” including what LumenSync deliberately refuses to guess.",
+        detail: "Running a coordination check and reading the findings — including what LumenSync deliberately refuses to guess.",
       },
       {
         label: "The ask",
@@ -61,7 +61,7 @@ export const REQUEST_DEMO = {
       },
       {
         title: "Bring your own package",
-        body: "If you'd rather see it against your drawings and schedule than our demo project, say so when we talk â€” we'll agree how to handle your files first.",
+        body: "If you'd rather see it against your drawings and schedule than our demo project, say so when we talk — we'll agree how to handle your files first.",
       },
       {
         title: "You'll see the limits",
@@ -75,7 +75,7 @@ export const CONTACT = {
   hero: {
     eyebrow: "Contact",
     heading: "Talk to the people building it.",
-    lead: "LumenSync is a small, focused product team. There's no call center and no lead-routing maze â€” conversations about the product happen directly with the people working on it.",
+    lead: "LumenSync is a small, focused product team. There's no call center and no lead-routing maze — conversations about the product happen directly with the people working on it.",
     primary: { href: "/request-demo", label: "Request a Demo" },
     secondary: { href: "/product", label: "Product Overview" },
     note: "Most questions get answered fastest in a working session against a real lighting package.",
@@ -102,7 +102,7 @@ export const CONTACT = {
       },
       {
         title: "Already using LumenSync",
-        body: "Sign in to the application and raise it with your project contact â€” your project record and history are already there.",
+        body: "Sign in to the application and raise it with your project contact — your project record and history are already there.",
       },
       {
         title: "Security or privacy concern",
@@ -116,9 +116,9 @@ export const CONTACT = {
     label: "About this page",
     /** Delivery unconfigured: the demo form cannot be offered as a route. */
     offline:
-      "We don't publish a general inquiries inbox or phone number, and online demo requests aren't switched on yet either â€” we'd rather point you at a route that actually gets answered than list one that doesn't. Getting the demo request monitored is the next step for this site.",
+      "We don't publish a general inquiries inbox or phone number, and online demo requests aren't switched on yet either — we'd rather point you at a route that actually gets answered than list one that doesn't. Getting the demo request monitored is the next step for this site.",
     /** Delivery configured: the form is the monitored route. */
     online:
-      "We don't publish a general inquiries inbox or phone number â€” a published address collects more automated mail than real questions. The demo request form is the monitored route, it reaches the product team directly, and it tells you plainly whether your message got through.",
+      "We don't publish a general inquiries inbox or phone number — a published address collects more automated mail than real questions. The demo request form is the monitored route, it reaches the product team directly, and it tells you plainly whether your message got through.",
   },
 } as const;
