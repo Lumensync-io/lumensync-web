@@ -1,4 +1,4 @@
-﻿import type { Boundary, Hero, Point } from "./types";
+import type { Boundary, Hero, Point } from "./types";
 
 /**
  * Company / trust copy: /why-lumensync, /security, /about.
@@ -11,13 +11,13 @@
 
 const DEMO_CTA = { href: "/request-demo", label: "Request a Demo" } as const;
 
-/* â”€â”€ /why-lumensync â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── /why-lumensync ───────────────────────────────────────── */
 
 export const WHY = {
   hero: {
     eyebrow: "Why LumenSync",
     heading: "Because the lighting package is the one that bites you late.",
-    lead: "Fixture counts, substitutions, missing cut sheets, controls that don't match the schedule â€” none of it is hard on its own. It goes wrong because the information lives in six places and only meets on the jobsite.",
+    lead: "Fixture counts, substitutions, missing cut sheets, controls that don't match the schedule — none of it is hard on its own. It goes wrong because the information lives in six places and only meets on the jobsite.",
     primary: DEMO_CTA,
     secondary: { href: "/product", label: "See the product" },
   } satisfies Hero,
@@ -32,7 +32,7 @@ export const WHY = {
       },
       {
         title: "Documentation is filed, not connected",
-        body: "The approved cut sheet exists â€” in an email thread â€” and no one can say which types still don't have one.",
+        body: "The approved cut sheet exists — in an email thread — and no one can say which types still don't have one.",
       },
       {
         title: "Questions get asked late",
@@ -50,7 +50,7 @@ export const WHY = {
     points: [
       {
         title: "The drawing is the index",
-        body: "Not a folder tree. If a condition matters, it has a fixture type and â€” where a placement exists â€” a spot on a sheet you can open.",
+        body: "Not a folder tree. If a condition matters, it has a fixture type and — where a placement exists — a spot on a sheet you can open.",
       },
       {
         title: "Findings, not verdicts",
@@ -58,7 +58,7 @@ export const WHY = {
       },
       {
         title: "Preparation is automated; decisions aren't",
-        body: "Drafting an RFI, comparing counts, staging a detected schedule â€” machine work. Approving, resolving and issuing â€” human work, every time.",
+        body: "Drafting an RFI, comparing counts, staging a detected schedule — machine work. Approving, resolving and issuing — human work, every time.",
       },
       {
         title: "Nothing disappears",
@@ -104,13 +104,13 @@ export const WHY = {
   } satisfies Boundary,
 } as const;
 
-/* â”€â”€ /security â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── /security ────────────────────────────────────────────── */
 
 export const SECURITY = {
   hero: {
     eyebrow: "Security",
     heading: "Built to protect the work behind every project.",
-    lead: "LumenSync keeps project access controlled, scoped, and enforced by the application â€” not by assumptions in the browser. From drawings and fixture information to project decisions and approvals, access is limited to the people who are authorized to work with it.",
+    lead: "LumenSync keeps project access controlled, scoped, and enforced by the application — not by assumptions in the browser. From drawings and fixture information to project decisions and approvals, access is limited to the people who are authorized to work with it.",
     primary: { href: "/request-demo", label: "Request a Demo" },
     secondary: { href: "/contact", label: "Ask a Security Question" },
     note: "Have a specific IT or security requirement? We'll tell you what LumenSync supports today and what it does not.",
@@ -211,7 +211,7 @@ export const SECURITY = {
   assurance: {
     heading: "We make security claims carefully.",
     paragraphs: [
-      "Security language should describe what a product actually does â€” not what a badge, acronym, or marketing phrase might imply. LumenSync does not currently advertise third-party security certifications or attestations that it has not completed.",
+      "Security language should describe what a product actually does — not what a badge, acronym, or marketing phrase might imply. LumenSync does not currently advertise third-party security certifications or attestations that it has not completed.",
       "As the platform and customer requirements evolve, additional independent security reviews and assurance programs may become appropriate. Any such claims will be published only after they are supported by completed work.",
     ],
   },
@@ -224,7 +224,7 @@ export const SECURITY = {
   },
 } as const;
 
-/* â”€â”€ /about â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── /about ───────────────────────────────────────────────── */
 
 export const ABOUT = {
   hero: {
@@ -237,7 +237,7 @@ export const ABOUT = {
   origin: {
     eyebrow: "Where it came from",
     heading: "The problem came first.",
-    lead: "Commercial lighting packages are unusually fragmented: a schedule from one source, drawings from another, submittals and cut sheets from a third, controls information from a fourth â€” all describing the same install, none of them reconciled against each other until something is wrong in the field. LumenSync was designed around that specific problem by people with hands-on commercial electrical experience, and shaped against real lighting packages rather than a whiteboard.",
+    lead: "Commercial lighting packages are unusually fragmented: a schedule from one source, drawings from another, submittals and cut sheets from a third, controls information from a fourth — all describing the same install, none of them reconciled against each other until something is wrong in the field. LumenSync was designed around that specific problem by people with hands-on commercial electrical experience, and shaped against real lighting packages rather than a whiteboard.",
     points: [
       {
         title: "Narrow on purpose",
@@ -245,7 +245,7 @@ export const ABOUT = {
       },
       {
         title: "Grounded in real packages",
-        body: "Features are shaped by what actual drawings and schedules look like â€” including the messy, scanned and incomplete ones.",
+        body: "Features are shaped by what actual drawings and schedules look like — including the messy, scanned and incomplete ones.",
       },
       {
         title: "Independent",
