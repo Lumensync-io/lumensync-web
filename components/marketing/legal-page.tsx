@@ -26,7 +26,14 @@ export function LegalPageBody({
 }) {
   return (
     <>
-      <Section aria-labelledby="page-heading">
+      {/*
+        Deliberately NOT `aria-labelledby="page-heading"`. The `#policy`
+        section below is already a region named with the same page heading, so
+        naming this one too produced two identically-named landmarks
+        (axe `landmark-unique`). Dropping the name here leaves one policy
+        landmark and changes no published wording.
+      */}
+      <Section>
         <Container>
           <div className="max-w-3xl">
             <Eyebrow>{page.eyebrow}</Eyebrow>
@@ -56,8 +63,14 @@ export function LegalPageBody({
             </h2>
 
             <div className="grid gap-10">
+              {/*
+                Plain <div>, not <section aria-label>. Eleven named sections
+                created eleven nested `region` landmarks, which makes landmark
+                navigation noisier rather than clearer. The <h3> headings still
+                provide the structure, and no published wording changes.
+              */}
               {page.sections.map((section) => (
-                <section key={section.heading} aria-label={section.heading}>
+                <div key={section.heading}>
                   <h3 className="text-lg font-semibold text-ink-strong">
                     {section.heading}
                   </h3>
@@ -76,7 +89,7 @@ export function LegalPageBody({
                       </li>
                     ))}
                   </ul>
-                </section>
+                </div>
               ))}
             </div>
           </div>

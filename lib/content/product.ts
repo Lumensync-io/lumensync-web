@@ -1,4 +1,4 @@
-import type { Boundary, Hero, Point, Step } from "./types";
+﻿import type { Boundary, Hero, Point, Step } from "./types";
 
 /**
  * Product-area copy. Every capability described here is present in the shipped
@@ -12,13 +12,13 @@ const DEMO_CTA = { href: "/request-demo", label: "Request a Demo" } as const;
 /** One-line summary per product area, used by the product navigation grid. */
 export const PRODUCT_AREA_BLURBS: Record<string, string> = {
   "/product/drawings":
-    "Fixture placements, markers and status on the actual sheet — and the link back to it from everywhere else.",
+    "Fixture placements, markers and status on the actual sheet â€” and the link back to it from everywhere else.",
   "/product/checks":
     "Compare the schedule against what's on the drawings and surface conditions that need a human look.",
   "/product/fixtures":
     "Fixture schedule, versions, types and documentation held as one reviewable record.",
   "/product/controls":
-    "Controls drawings and mappings coordinated against the lighting package — review-gated, never auto-applied.",
+    "Controls drawings and mappings coordinated against the lighting package â€” review-gated, never auto-applied.",
   "/product/rfis":
     "Findings become drafted RFI candidates with evidence; a manager decides what gets issued.",
   "/product/field":
@@ -27,13 +27,13 @@ export const PRODUCT_AREA_BLURBS: Record<string, string> = {
     "A read-only readiness view of what's still open before you hand the job over.",
 };
 
-/* ── /product ─────────────────────────────────────────────── */
+/* â”€â”€ /product â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const PRODUCT_OVERVIEW = {
   hero: {
     eyebrow: "Product",
     heading: "One lighting record, seven ways to work with it.",
-    lead: "LumenSync holds the lighting package as a single project record — schedule, types, documentation, drawings, placements, findings, RFIs and field status — and keeps every part of it pointed at the same sheet.",
+    lead: "LumenSync holds the lighting package as a single project record â€” schedule, types, documentation, drawings, placements, findings, RFIs and field status â€” and keeps every part of it pointed at the same sheet.",
     primary: DEMO_CTA,
     secondary: { href: "/why-lumensync", label: "Why LumenSync" },
     note: "Built for electrical contractors, project managers, foremen and lighting-coordination teams.",
@@ -41,7 +41,7 @@ export const PRODUCT_OVERVIEW = {
   spine: {
     eyebrow: "The spine",
     heading: "The drawing is the connective tissue.",
-    lead: "Most lighting tools organise documents. LumenSync organises the project around where the work physically happens: fixture types are placed on the sheet, checks compare the schedule to those placements, findings link back to a location, RFIs carry that evidence, and the field crew works from the same markers.",
+    lead: "Most lighting tools organize documents. LumenSync organizes the project around where the work physically happens: fixture types are placed on the sheet, checks compare the schedule to those placements, findings link back to a location, RFIs carry that evidence, and the field crew works from the same markers.",
     points: [
       {
         title: "One record, not seven exports",
@@ -76,7 +76,7 @@ export const PRODUCT_OVERVIEW = {
       },
       {
         label: "Work the findings",
-        detail: "Severity, counts and the delta — acknowledge, resolve, ignore, raise a field issue or start an RFI.",
+        detail: "Severity, counts and the delta â€” acknowledge, resolve, ignore, raise a field issue or start an RFI.",
       },
       {
         label: "Issue what needs asking",
@@ -93,7 +93,7 @@ export const PRODUCT_OVERVIEW = {
     ] satisfies Step[],
   },
   boundary: {
-    heading: "What LumenSync is — and isn't.",
+    heading: "What LumenSync is â€” and isn't.",
     lead: "The product is deliberately narrow. Lighting coordination is the whole job.",
     is: [
       "A lighting-specific coordination record for commercial projects",
@@ -103,20 +103,20 @@ export const PRODUCT_OVERVIEW = {
     ],
     isNot: [
       "Construction-management, scheduling, accounting or procurement software",
-      "A CAD or BIM authoring tool — LumenSync reads drawings, it doesn't draft them",
+      "A CAD or BIM authoring tool â€” LumenSync reads drawings, it doesn't draft them",
       "A building-automation or lighting-control system",
       "An estimating or takeoff platform",
     ],
   } satisfies Boundary,
 } as const;
 
-/* ── /product/drawings ────────────────────────────────────── */
+/* â”€â”€ /product/drawings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const DRAWINGS = {
   hero: {
     eyebrow: "Drawings",
     heading: "Coordination becomes real when it's on the sheet.",
-    lead: "Upload the lighting drawings, place fixture types where they belong, and everything else in LumenSync gains an address — a finding, a field issue or an RFI can open the exact sheet and location it came from.",
+    lead: "Upload the lighting drawings, place fixture types where they belong, and everything else in LumenSync gains an address â€” a finding, a field issue or an RFI can open the exact sheet and location it came from.",
     primary: DEMO_CTA,
     secondary: { href: "/product/checks", label: "See how checks use it" },
   } satisfies Hero,
@@ -127,7 +127,7 @@ export const DRAWINGS = {
     points: [
       {
         title: "Place by fixture type",
-        body: "Pick a type, tap the sheet, add an optional label — the marker appears immediately and the type's placed count updates.",
+        body: "Pick a type, tap the sheet, add an optional label â€” the marker appears immediately and the type's placed count updates.",
       },
       {
         title: "Filter by type and status",
@@ -145,7 +145,7 @@ export const DRAWINGS = {
   },
   records: {
     eyebrow: "Drawing records",
-    heading: "Which sheet is current — and what's pointing at the old one.",
+    heading: "Which sheet is current â€” and what's pointing at the old one.",
     lead: "Drawings are records, not just files: each carries a name, sheet number, revision and source. Drawing checks look at that set and flag duplicate current sheets, and placements that still reference a superseded or non-current drawing.",
     points: [
       {
@@ -195,13 +195,13 @@ export const DRAWINGS = {
   } satisfies Boundary,
 } as const;
 
-/* ── /product/checks ──────────────────────────────────────── */
+/* â”€â”€ /product/checks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const CHECKS = {
   hero: {
     eyebrow: "Coordination checks",
     heading: "Findings, not verdicts.",
-    lead: "LumenSync compares the current fixture schedule against what's actually placed on the drawings and reports where they disagree. Every result is a condition for a person to review — labelled as a potential coordination issue, never as a confirmed error.",
+    lead: "LumenSync compares the current fixture schedule against what's actually placed on the drawings and reports where they disagree. Every result is a condition for a person to review â€” labeled as a potential coordination issue, never as a confirmed error.",
     primary: DEMO_CTA,
     secondary: { href: "/product/rfis", label: "From finding to RFI" },
   } satisfies Hero,
@@ -244,7 +244,7 @@ export const CHECKS = {
   },
   honesty: {
     label: "Fail-closed by design",
-    body: "If the schedule source is unclear or the underlying data can't be read, LumenSync says so and stops. It does not guess a quantity, invent a match, or present an assumption as a result. Checks are an assist for review — they do not certify that a package is correct.",
+    body: "If the schedule source is unclear or the underlying data can't be read, LumenSync says so and stops. It does not guess a quantity, invent a match, or present an assumption as a result. Checks are an assist for review â€” they do not certify that a package is correct.",
   },
   boundary: {
     heading: "What the checks do and don't claim.",
@@ -261,19 +261,19 @@ export const CHECKS = {
   } satisfies Boundary,
 } as const;
 
-/* ── /product/fixtures ────────────────────────────────────── */
+/* â”€â”€ /product/fixtures â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const FIXTURES = {
   hero: {
     eyebrow: "Fixture information",
-    heading: "The schedule, the types and the paperwork — one record.",
+    heading: "The schedule, the types and the paperwork â€” one record.",
     lead: "Import the fixture schedule, keep it versioned, and hold each fixture type's specification and documentation against it. Everything the checks, the drawings and the field crew use comes from here.",
     primary: DEMO_CTA,
     secondary: { href: "/product/checks", label: "How checks use this" },
   } satisfies Hero,
   intake: {
     eyebrow: "Getting the schedule in",
-    heading: "Four ways in — all of them reviewable.",
+    heading: "Four ways in â€” all of them reviewable.",
     lead: "Nothing is committed to the authoritative schedule until a person approves it.",
     steps: [
       {
@@ -290,14 +290,14 @@ export const FIXTURES = {
       },
       {
         label: "OCR selected pages",
-        detail: "For scanned or unreadable sheets, OCR up to a few pages — again, staged for review, never committed automatically.",
+        detail: "For scanned or unreadable sheets, OCR up to a few pages â€” again, staged for review, never committed automatically.",
       },
     ] satisfies Step[],
   },
   record: {
     eyebrow: "What a fixture record holds",
     heading: "The fields coordination actually argues about.",
-    lead: "Fixture types carry a type code and description plus manufacturer, model or catalog number, wattage and voltage. Where the source documents provide them, additional characteristics such as lumens, colour temperature, CRI, mounting and control behaviour are held on the same record.",
+    lead: "Fixture types carry a type code and description plus manufacturer, model or catalog number, wattage and voltage. Where the source documents provide them, additional characteristics such as lumens, color temperature, CRI, mounting and control behavior are held on the same record.",
     points: [
       {
         title: "Schedule and versions",
@@ -305,7 +305,7 @@ export const FIXTURES = {
       },
       {
         title: "Specification fields",
-        body: "Manufacturer, model, watts and voltage sit with the type — the same values a check or a submittal review needs.",
+        body: "Manufacturer, model, watts and voltage sit with the type â€” the same values a check or a submittal review needs.",
       },
       {
         title: "Cut sheets and submittals",
@@ -319,10 +319,10 @@ export const FIXTURES = {
   },
   gaps: {
     label: "Missing information is a finding too",
-    body: "Real packages arrive incomplete. LumenSync does not fill in a blank wattage, mounting type or cut sheet — it keeps the gap visible, and a missing field can itself become a coordination finding or an RFI candidate for the design team.",
+    body: "Real packages arrive incomplete. LumenSync does not fill in a blank wattage, mounting type or cut sheet â€” it keeps the gap visible, and a missing field can itself become a coordination finding or an RFI candidate for the design team.",
   },
   boundary: {
-    heading: "A coordination record, not a catalogue.",
+    heading: "A coordination record, not a catalog.",
     is: [
       "Holding the project's fixture schedule, types and documentation",
       "Versioning the schedule and staging detected rows for review",
@@ -336,16 +336,28 @@ export const FIXTURES = {
   } satisfies Boundary,
 } as const;
 
-/* ── /product/controls ────────────────────────────────────── */
+/* â”€â”€ /product/controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const CONTROLS = {
   hero: {
     eyebrow: "Controls coordination",
     heading: "Keep the controls package talking to the lighting package.",
-    lead: "Control drawings, wiring diagrams and controls documents live with the project, and zone assignments are mapped against the fixture schedule — so a mismatch between what's scheduled and what the controls package says surfaces as a coordination question, not a startup surprise.",
+    lead: "Control drawings, wiring diagrams and controls documents live with the project, and zone assignments are mapped against the fixture schedule â€” so a mismatch between what's scheduled and what the controls package says surfaces as a coordination question, not a startup surprise.",
     primary: DEMO_CTA,
     secondary: { href: "/product/checks", label: "How checks work" },
   } satisfies Hero,
+
+  /** Hero diagram labels. Conceptual, not a product capture. */
+  diagram: {
+    frame: "Controls coordination",
+    schedule: { title: "Fixture schedule", tag: "Types, quantities, scheduled behavior" },
+    controls: { title: "Controls package", tag: "Zones, wiring, control documents" },
+    mapping: { title: "Approved mapping", tag: "Manager-entered, review-gated" },
+    outcome: "A disagreement becomes a coordination finding, never a silent change.",
+    description:
+      "The fixture schedule and the controls package are compared through a mapping that a manager enters and someone with authority approves. Where the two disagree, LumenSync raises a coordination finding rather than changing anything.",
+  },
+
   documents: {
     eyebrow: "Controls documents",
     heading: "Everything controls-related in one place.",
@@ -356,7 +368,7 @@ export const CONTROLS = {
       },
       {
         title: "Routed from Files",
-        body: "Any file classified as a control drawing or controls document in the project's Files tab appears here automatically — no duplicate uploads.",
+        body: "Any file classified as a control drawing or controls document in the project's Files tab appears here automatically â€” no duplicate uploads.",
       },
       {
         title: "Kept with the lighting record",
@@ -367,12 +379,12 @@ export const CONTROLS = {
   mappings: {
     eyebrow: "Controls mappings",
     heading: "Manager-entered, review-gated, never auto-applied.",
-    lead: "Mappings tie fixture types to control zones and control behaviour. They are entered by a manager, start in a needs-review state, and only approved mappings feed the coordination checks.",
+    lead: "Mappings tie fixture types to control zones and control behavior. They are entered by a manager, start in a needs-review state, and only approved mappings feed the coordination checks.",
     steps: [
       { label: "Enter", detail: "A manager records the mapping against the controls package." },
       { label: "Review", detail: "It sits in Needs review until someone with authority confirms it." },
-      { label: "Approve", detail: "Approved mappings — and only approved mappings — feed coordination checks." },
-      { label: "Compare", detail: "Scheduled control behaviour against the mapped controls package; mismatches become findings to review." },
+      { label: "Approve", detail: "Approved mappings â€” and only approved mappings â€” feed coordination checks." },
+      { label: "Compare", detail: "Scheduled control behavior against the mapped controls package; mismatches become findings to review." },
     ] satisfies Step[],
     note: "Nothing entered here is sent to the design team or to a controls vendor. It stays inside the project record until a person issues an RFI.",
   },
@@ -381,7 +393,7 @@ export const CONTROLS = {
     lead: "LumenSync helps you reconcile what the documents say. It never touches a live system.",
     is: [
       "Holding control drawings and controls documents with the project",
-      "Mapping fixture types to control zones and behaviour, under review",
+      "Mapping fixture types to control zones and behavior, under review",
       "Flagging mismatches between the schedule and the controls package",
     ],
     isNot: [
@@ -392,19 +404,19 @@ export const CONTROLS = {
   } satisfies Boundary,
 } as const;
 
-/* ── /product/rfis ────────────────────────────────────────── */
+/* â”€â”€ /product/rfis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const RFIS = {
   hero: {
     eyebrow: "RFIs",
     heading: "LumenSync does the preparation. You decide what gets asked.",
-    lead: "Coordination findings become RFI candidates with their evidence attached and a draft question written. They sit in a queue until a manager reviews, completes and issues them — nothing leaves the project on its own.",
+    lead: "Coordination findings become RFI candidates with their evidence attached and a draft question written. They sit in a queue until a manager reviews, completes and issues them â€” nothing leaves the project on its own.",
     primary: DEMO_CTA,
     secondary: { href: "/product/checks", label: "Where findings come from" },
   } satisfies Hero,
   workflow: {
     eyebrow: "The workflow",
-    heading: "Finding → evidence → draft → review → issue.",
+    heading: "Finding â†’ evidence â†’ draft â†’ review â†’ issue.",
     steps: [
       { label: "Finding", detail: "A check surfaces a discrepancy, or a person raises one." },
       { label: "Evidence", detail: "Schedule rows, scan results and drawing references are attached to the candidate." },
@@ -416,7 +428,7 @@ export const RFIS = {
   queue: {
     eyebrow: "The queue",
     heading: "See what's real before it becomes an email.",
-    lead: "Candidates are counted by state — detected, needs review, ready to issue, issued — and filtered by readiness, evidence, key fields and classification, so a PM can work the list instead of re-deriving it.",
+    lead: "Candidates are counted by state â€” detected, needs review, ready to issue, issued â€” and filtered by readiness, evidence, key fields and classification, so a PM can work the list instead of re-deriving it.",
     points: [
       {
         title: "Confidence, stated plainly",
@@ -424,7 +436,7 @@ export const RFIS = {
       },
       {
         title: "Blocking issues are explicit",
-        body: "A candidate that can't be issued says why — for example a missing drawing reference or an unreviewed status — instead of failing silently at the end.",
+        body: "A candidate that can't be issued says why â€” for example a missing drawing reference or an unreviewed status â€” instead of failing silently at the end.",
       },
       {
         title: "Duplicates are superseded",
@@ -456,12 +468,12 @@ export const RFIS = {
   } satisfies Boundary,
 } as const;
 
-/* ── /product/field ───────────────────────────────────────── */
+/* â”€â”€ /product/field â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const FIELD = {
   hero: {
     eyebrow: "Field",
-    heading: "What's left, by type and by sheet — on the phone in your pocket.",
+    heading: "What's left, by type and by sheet â€” on the phone in your pocket.",
     lead: "The field view runs off the same schedule and the same drawings as the office. Scheduled, wired, remaining. Open the sheet, find the marker, keep going.",
     primary: DEMO_CTA,
     secondary: { href: "/product/drawings", label: "See the drawing viewer" },
@@ -470,7 +482,7 @@ export const FIELD = {
   progress: {
     eyebrow: "Progress you can trust",
     heading: "Counted from placements, not from a status meeting.",
-    lead: "Every placement on a drawing carries a status — Not Started, Rough In, Wired — and that rolls up automatically: per fixture type, per drawing, and across the job.",
+    lead: "Every placement on a drawing carries a status â€” Not Started, Rough In, Wired â€” and that rolls up automatically: per fixture type, per drawing, and across the job.",
     points: [
       {
         title: "By fixture type",
@@ -486,7 +498,7 @@ export const FIELD = {
       },
       {
         title: "Field issues from the field",
-        body: "Hit something that doesn't match the drawing? A field issue carries the type and location back to the office — and shows up in the closeout readiness view until it's dealt with.",
+        body: "Hit something that doesn't match the drawing? A field issue carries the type and location back to the office â€” and shows up in the closeout readiness view until it's dealt with.",
       },
     ] satisfies Point[],
   },
@@ -504,7 +516,7 @@ export const FIELD = {
       },
       {
         title: "Everything anchored to a drawing",
-        body: "Fixture markers, not a list of codes — you look at the sheet you're already standing under.",
+        body: "Fixture markers, not a list of codes â€” you look at the sheet you're already standing under.",
       },
     ] satisfies Point[],
   },
@@ -523,7 +535,7 @@ export const FIELD = {
   } satisfies Boundary,
 } as const;
 
-/* ── /product/closeout ────────────────────────────────────── */
+/* â”€â”€ /product/closeout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const CLOSEOUT = {
   hero: {
@@ -536,7 +548,7 @@ export const CLOSEOUT = {
   readiness: {
     eyebrow: "Closeout readiness",
     heading: "Five categories, one honest summary.",
-    lead: "Each category is Ready, Needs review, Blocking or Not tracked, with the count that produced it. Nothing here is a self-assessment — it reads the same records the rest of the project runs on.",
+    lead: "Each category is Ready, Needs review, Blocking or Not tracked, with the count that produced it. Nothing here is a self-assessment â€” it reads the same records the rest of the project runs on.",
     items: [
       {
         title: "Field issues",
@@ -560,7 +572,7 @@ export const CLOSEOUT = {
       },
     ] satisfies Point[],
     caption:
-      "Closeout readiness — five tracked categories with the counts behind each status.",
+      "Closeout readiness â€” five tracked categories with the counts behind each status.",
   },
   outcome: {
     eyebrow: "Why it lands better",

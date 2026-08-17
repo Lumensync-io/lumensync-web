@@ -26,8 +26,23 @@ export const APP_URL = "https://app.lumensync.io";
 export const SITE_TAGLINE =
   "Complex Lighting Installs, Finally Tied to the Drawings.";
 
+/**
+ * The homepage document title.
+ *
+ * Deliberately shorter than `SITE_TAGLINE`: the tagline is the approved on-page
+ * headline and stays exactly as it is, but at 68 characters the combined
+ * "LumenSync — <tagline>" title was cut off mid-phrase in search results. This
+ * keeps the brand and the positioning inside the ~60-character window.
+ */
+export const SITE_TITLE =
+  "LumenSync — Lighting Coordination Tied to the Drawings";
+
+/**
+ * The homepage meta description. Kept under 160 characters so search results
+ * show the whole sentence rather than truncating the payoff.
+ */
 export const SITE_DESCRIPTION =
-  "LumenSync ties fixture schedules, cut sheets, submittals, controls, checks, RFIs and field status back to the actual lighting drawings — so coordination gaps show up on the sheet, before they show up on the job.";
+  "Fixture schedules, submittals, controls, checks, RFIs and field status, connected to the actual lighting drawings — so gaps surface on the sheet, not on site.";
 
 export interface PageDef {
   /** Route path beginning with "/" */
@@ -103,21 +118,25 @@ export const primaryNav: PageDef[] = [
   {
     path: "/why-lumensync",
     label: "Why LumenSync",
-    title: "Why LumenSync",
+    // Not "Why LumenSync": with the global "%s — LumenSync" template that
+    // rendered as "Why LumenSync — LumenSync".
+    title: "Why We Built It",
     description:
-      "Why commercial lighting coordination goes wrong late, and the four decisions LumenSync is built on: the drawing as index, findings not verdicts, human decisions, nothing lost.",
+      "Why commercial lighting coordination goes wrong late, and the four decisions behind the product: the drawing as index, findings not verdicts, human decisions, nothing lost.",
   },
   {
     path: "/security",
     label: "Security",
     title: "Security",
     description:
-      "Learn how LumenSync approaches authenticated access, project-scoped authorization, protected project information, and controlled software releases.",
+      "How LumenSync protects project information: authenticated access, project-scoped authorization, permission-controlled actions, and protected drawings and records.",
   },
   {
     path: "/about",
     label: "Company",
-    title: "About LumenSync",
+    // Same defect as /why-lumensync: "About LumenSync" rendered as
+    // "About LumenSync — LumenSync" under the global title template.
+    title: "About",
     description:
       "LumenSync is an independent software product built around one problem: making complex commercial lighting coordination legible, from schedule to closeout.",
   },

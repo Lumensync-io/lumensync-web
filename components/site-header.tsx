@@ -8,6 +8,16 @@ export function SiteHeader() {
   const restNav = primaryNav.filter((p) => p.path !== "/product");
   return (
     <header className="sticky top-0 z-40 border-b border-line-subtle bg-surface-base/90 backdrop-blur">
+      {/*
+        First focusable element on every page. It sits inside the banner
+        landmark so no page content lives outside a landmark.
+      */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent-strong focus:px-4 focus:py-2 focus:text-accent-ink"
+      >
+        Skip to main content
+      </a>
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         <Logo />
 

@@ -1,9 +1,9 @@
-import type { Boundary, Hero, Point, Step } from "./types";
+﻿import type { Boundary, Hero, Point } from "./types";
 
 /**
  * Company / trust copy: /why-lumensync, /security, /about.
  *
- * Security claims are limited to behaviour that is actually implemented and
+ * Security claims are limited to behavior that is actually implemented and
  * verifiable. No certifications, audits or third-party assessments are claimed.
  * The About page states no founding date, headcount, funding, customer count or
  * office location, because none of those are verified public facts.
@@ -11,13 +11,13 @@ import type { Boundary, Hero, Point, Step } from "./types";
 
 const DEMO_CTA = { href: "/request-demo", label: "Request a Demo" } as const;
 
-/* ── /why-lumensync ───────────────────────────────────────── */
+/* â”€â”€ /why-lumensync â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const WHY = {
   hero: {
     eyebrow: "Why LumenSync",
     heading: "Because the lighting package is the one that bites you late.",
-    lead: "Fixture counts, substitutions, missing cut sheets, controls that don't match the schedule — none of it is hard on its own. It goes wrong because the information lives in six places and only meets on the jobsite.",
+    lead: "Fixture counts, substitutions, missing cut sheets, controls that don't match the schedule â€” none of it is hard on its own. It goes wrong because the information lives in six places and only meets on the jobsite.",
     primary: DEMO_CTA,
     secondary: { href: "/product", label: "See the product" },
   } satisfies Hero,
@@ -32,7 +32,7 @@ export const WHY = {
       },
       {
         title: "Documentation is filed, not connected",
-        body: "The approved cut sheet exists — in an email thread — and no one can say which types still don't have one.",
+        body: "The approved cut sheet exists â€” in an email thread â€” and no one can say which types still don't have one.",
       },
       {
         title: "Questions get asked late",
@@ -50,7 +50,7 @@ export const WHY = {
     points: [
       {
         title: "The drawing is the index",
-        body: "Not a folder tree. If a condition matters, it has a fixture type and — where a placement exists — a spot on a sheet you can open.",
+        body: "Not a folder tree. If a condition matters, it has a fixture type and â€” where a placement exists â€” a spot on a sheet you can open.",
       },
       {
         title: "Findings, not verdicts",
@@ -58,7 +58,7 @@ export const WHY = {
       },
       {
         title: "Preparation is automated; decisions aren't",
-        body: "Drafting an RFI, comparing counts, staging a detected schedule — machine work. Approving, resolving and issuing — human work, every time.",
+        body: "Drafting an RFI, comparing counts, staging a detected schedule â€” machine work. Approving, resolving and issuing â€” human work, every time.",
       },
       {
         title: "Nothing disappears",
@@ -104,13 +104,13 @@ export const WHY = {
   } satisfies Boundary,
 } as const;
 
-/* ── /security ────────────────────────────────────────────── */
+/* â”€â”€ /security â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const SECURITY = {
   hero: {
     eyebrow: "Security",
     heading: "Built to protect the work behind every project.",
-    lead: "LumenSync keeps project access controlled, scoped, and enforced by the application — not by assumptions in the browser. From drawings and fixture information to project decisions and approvals, access is limited to the people who are authorized to work with it.",
+    lead: "LumenSync keeps project access controlled, scoped, and enforced by the application â€” not by assumptions in the browser. From drawings and fixture information to project decisions and approvals, access is limited to the people who are authorized to work with it.",
     primary: { href: "/request-demo", label: "Request a Demo" },
     secondary: { href: "/contact", label: "Ask a Security Question" },
     note: "Have a specific IT or security requirement? We'll tell you what LumenSync supports today and what it does not.",
@@ -151,59 +151,36 @@ export const SECURITY = {
     ] satisfies Point[],
   },
 
-  release: {
-    eyebrow: "Release discipline",
-    heading: "Security is part of how we build.",
-    lead: "Security controls are only useful if the software continues to enforce them after every release. That is why LumenSync treats release discipline as part of the security model.",
-    steps: [
-      { label: "Review", detail: "Changes are read and approved before they can reach the release branch." },
-      { label: "Test", detail: "Automated checks run against the change, not just against the developer's machine." },
-      { label: "Release", detail: "Only reviewed, checked code is promoted to production." },
-      { label: "Verify", detail: "The running release is confirmed against the code that was approved." },
-      { label: "Roll back", detail: "A known-good release stays available until the new one is accepted." },
-    ] satisfies Step[],
+  protected: {
+    eyebrow: "What is protected",
+    heading: "The whole project record sits behind the same door.",
+    lead: "Security is not applied to one part of a project and left off the rest. Drawings, fixture information, coordination findings, RFIs and field status are all reached through the same authenticated, project-scoped workflows.",
     points: [
       {
-        title: "Reviewed changes",
-        body: "Production changes move through a controlled source and review process before release.",
+        title: "Drawings and sheets",
+        body: "Lighting drawings and the placements marked on them are reached through the application, by people with access to that project.",
       },
       {
-        title: "Automated verification",
-        body: "Builds are checked with automated testing before production deployment, including tests that exercise authentication, authorization, application behavior, accessibility, and browser workflows.",
+        title: "Fixture information",
+        body: "The fixture schedule, fixture types and the documentation attached to them are part of the project record, not a separately shared file set.",
       },
       {
-        title: "Production provenance",
-        body: "Production releases are verified against the code that was reviewed and approved so the team can establish exactly what version is serving customers.",
+        title: "Submittals and cut sheets",
+        body: "Approved cut sheets and submittal documentation are held with the project and opened through controlled workflows rather than permanent public links.",
       },
       {
-        title: "Controlled rollback",
-        body: "Known-good deployments are preserved during release verification so production can be rolled back if a new release does not meet acceptance requirements.",
+        title: "Checks and findings",
+        body: "Coordination findings describe conditions on a specific project and are visible to the people working on that project.",
+      },
+      {
+        title: "RFIs and evidence",
+        body: "RFI drafts, the evidence attached to them and their status are project records, and issuing one is a permission-controlled action.",
+      },
+      {
+        title: "Field status and history",
+        body: "Install progress and the history of what changed stay inside the project, available to the team working it.",
       },
     ] satisfies Point[],
-  },
-
-  failSafe: {
-    eyebrow: "Failure behavior",
-    heading: "Designed to fail safely.",
-    lead: "When LumenSync cannot confirm that an action should succeed, the preferred behavior is to stop rather than guess. That approach is used throughout sensitive workflows where a false success could create a larger operational problem.",
-    examplesIntro: "Examples include:",
-    examples: [
-      "authorization checks before protected actions",
-      "validation before accepting important workflow changes",
-      "rejecting invalid or incomplete requests rather than silently accepting them",
-      "surfacing delivery failures instead of presenting a false confirmation",
-    ],
-    closing:
-      "The objective is straightforward: when the system cannot safely complete an operation, the user should know.",
-    panel: {
-      heading: "When LumenSync cannot safely complete an action",
-      steps: [
-        "Stop",
-        "Reject the invalid request",
-        "Preserve the current state",
-        "Tell the user what happened",
-      ],
-    },
   },
 
   separation: {
@@ -234,7 +211,7 @@ export const SECURITY = {
   assurance: {
     heading: "We make security claims carefully.",
     paragraphs: [
-      "Security language should describe what a product actually does — not what a badge, acronym, or marketing phrase might imply. LumenSync does not currently advertise third-party security certifications or attestations that it has not completed.",
+      "Security language should describe what a product actually does â€” not what a badge, acronym, or marketing phrase might imply. LumenSync does not currently advertise third-party security certifications or attestations that it has not completed.",
       "As the platform and customer requirements evolve, additional independent security reviews and assurance programs may become appropriate. Any such claims will be published only after they are supported by completed work.",
     ],
   },
@@ -247,7 +224,7 @@ export const SECURITY = {
   },
 } as const;
 
-/* ── /about ───────────────────────────────────────────────── */
+/* â”€â”€ /about â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const ABOUT = {
   hero: {
@@ -260,7 +237,7 @@ export const ABOUT = {
   origin: {
     eyebrow: "Where it came from",
     heading: "The problem came first.",
-    lead: "Commercial lighting packages are unusually fragmented: a schedule from one source, drawings from another, submittals and cut sheets from a third, controls information from a fourth — all describing the same install, none of them reconciled against each other until something is wrong in the field. LumenSync was designed around that specific problem by people with hands-on commercial electrical experience, and shaped against real lighting packages rather than a whiteboard.",
+    lead: "Commercial lighting packages are unusually fragmented: a schedule from one source, drawings from another, submittals and cut sheets from a third, controls information from a fourth â€” all describing the same install, none of them reconciled against each other until something is wrong in the field. LumenSync was designed around that specific problem by people with hands-on commercial electrical experience, and shaped against real lighting packages rather than a whiteboard.",
     points: [
       {
         title: "Narrow on purpose",
@@ -268,7 +245,7 @@ export const ABOUT = {
       },
       {
         title: "Grounded in real packages",
-        body: "Features are shaped by what actual drawings and schedules look like — including the messy, scanned and incomplete ones.",
+        body: "Features are shaped by what actual drawings and schedules look like â€” including the messy, scanned and incomplete ones.",
       },
       {
         title: "Independent",

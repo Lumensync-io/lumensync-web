@@ -92,7 +92,27 @@ describe("core site routes (LSWEB-005)", () => {
       expect(String(metadata.description ?? "").length).toBeGreaterThan(60);
       expect(metadata.alternates?.canonical).toBe(path);
       expect(metadata.openGraph?.title).toBe(page.title);
+      expect(metadata.openGraph?.url).toBe(path);
       expect(JSON.stringify(metadata)).not.toMatch(/vercel\.app/);
+    },
+  );
+
+  it.each(ROUTES)(
+    "$path carries the shared Open Graph card and a large Twitter card",
+    ({ path, metadata }) => {
+      // Next.js replaces — never merges — an inherited `openGraph` object when a
+      // child segment defines one. Setting `openGraph` per route therefore used
+      // to drop the site card on 15 of 16 routes, leaving blank link previews.
+      const images = metadata.openGraph?.images;
+      expect(Array.isArray(images), `${path} has no og:image`).toBe(true);
+      expect((images as unknown[]).length).toBeGreaterThan(0);
+      expect(JSON.stringify(images)).toContain("/opengraph-image");
+      const twitter = metadata.twitter as
+        | { card?: string; images?: unknown }
+        | null
+        | undefined;
+      expect(twitter?.card, `${path} twitter card`).toBe("summary_large_image");
+      expect(JSON.stringify(twitter?.images)).toContain("/opengraph-image");
     },
   );
 
@@ -193,11 +213,47 @@ describe("core site routes (LSWEB-005)", () => {
     expect(text).not.toMatch(
       /\bRPO\b|\bRTO\b|24\/7|\bbackups?\b|guaranteed|cyber ?insurance/i,
     );
-    // What it must do: state the access model and the release discipline.
+    // What it must do: state the access model and what that access covers.
     expect(text).toContain("Authenticated access");
     expect(text).toContain("Project-scoped permissions");
-    expect(text).toContain("Controlled rollback");
+    expect(text).toContain("Restricted actions");
+    expect(text).toContain("Drawings and sheets");
+    expect(text).toContain("RFIs and evidence");
     expect(text).toContain("We make security claims carefully.");
+  });
+
+  it("security page sells customer protection, not the vendor's dev process", () => {
+    render(<SecurityPage />);
+    const text = document.body.textContent ?? "";
+    // The public trust page is for a buyer deciding whether their drawings are
+    // safe. How LumenSync is built, reviewed, released and rolled back is
+    // internal engineering discipline, and belongs in a procurement response
+    // or a direct conversation — not in the public trust narrative.
+    for (const phrase of [
+      "Security is part of how we build",
+      "Designed to fail safely",
+      "Reviewed changes",
+      "Automated verification",
+      "Production provenance",
+      "Controlled rollback",
+      "release branch",
+      "roll back",
+      "rollback",
+      "pull request",
+      "continuous integration",
+      "production deployment",
+      "deployed to production",
+      "known-good",
+      "automated testing",
+      "before release",
+    ]) {
+      // NB: the plain word "deployment" is deliberately NOT on this list — the
+      // closing CTA legitimately asks about the *customer's* procurement and
+      // deployment requirements, which is customer-facing, not dev-process copy.
+      expect(text.toLowerCase(), `/security still mentions "${phrase}"`).not.toContain(
+        phrase.toLowerCase(),
+      );
+    }
   });
 
   it("request-demo is inactive and says so while delivery is unconfigured", () => {
