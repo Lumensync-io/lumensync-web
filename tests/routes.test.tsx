@@ -162,20 +162,42 @@ describe("core site routes (LSWEB-005)", () => {
     }
   });
 
-  it("security page claims no certifications", () => {
+  it("security page claims no certifications and names no standard", () => {
     render(<SecurityPage />);
     const text = document.body.textContent ?? "";
-    const disclaimer =
-      "No SOC 2, ISO 27001, HIPAA, FedRAMP or PCI certification or attestation is held or in progress that we are announcing here.";
-    expect(text).toContain(disclaimer);
-    // Outside that one disclaimer sentence, no standard may be named at all.
-    const rest = text.split(disclaimer).join(" ");
-    for (const standard of ["SOC 2", "ISO 27001", "HIPAA", "FedRAMP", "PCI"]) {
-      expect(rest, `${standard} may only appear in the disclaimer`).not.toContain(
+    // Stricter than the previous rule: the page used to be allowed to name
+    // these inside one disclaimer sentence. It no longer carries a disclaimer,
+    // so a standard appearing anywhere is a claim, and a defect.
+    for (const standard of [
+      "SOC 2",
+      "SOC2",
+      "ISO 27001",
+      "HIPAA",
+      "FedRAMP",
+      "PCI",
+    ]) {
+      expect(text, `${standard} must not appear on /security`).not.toContain(
         standard,
       );
     }
     expect(text).not.toMatch(/\bcertified\b|\bcompliant with\b|\battested\b/i);
+    // Nor may it imply assurance work that has not been done.
+    expect(text).not.toMatch(
+      /penetration test|\bpen test\b|\bSOC\b|zero trust|military-grade|bank-grade/i,
+    );
+    // Capabilities that are not implemented must not be advertised.
+    expect(text).not.toMatch(
+      /\bMFA\b|multi-factor|\bSSO\b|single sign-on|\bSCIM\b|\bSIEM\b|intrusion detection|uptime SLA|data residency|encryption at rest/i,
+    );
+    // Nor may it promise continuity or recovery commitments that do not exist.
+    expect(text).not.toMatch(
+      /\bRPO\b|\bRTO\b|24\/7|\bbackups?\b|guaranteed|cyber ?insurance/i,
+    );
+    // What it must do: state the access model and the release discipline.
+    expect(text).toContain("Authenticated access");
+    expect(text).toContain("Project-scoped permissions");
+    expect(text).toContain("Controlled rollback");
+    expect(text).toContain("We make security claims carefully.");
   });
 
   it("request-demo is inactive and says so while delivery is unconfigured", () => {

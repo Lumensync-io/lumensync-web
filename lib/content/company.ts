@@ -1,4 +1,4 @@
-import type { Boundary, Hero, Point } from "./types";
+import type { Boundary, Hero, Point, Step } from "./types";
 
 /**
  * Company / trust copy: /why-lumensync, /security, /about.
@@ -109,96 +109,141 @@ export const WHY = {
 export const SECURITY = {
   hero: {
     eyebrow: "Security",
-    heading: "Your project data stays inside your project.",
-    lead: "Security is designed into the application and the release process rather than bolted on afterwards. This page describes what LumenSync actually does today — no certifications are claimed and none are implied.",
-    primary: { href: "/request-demo", label: "Ask a security question" },
-    secondary: { href: "/product", label: "See the product" },
+    heading: "Built to protect the work behind every project.",
+    lead: "LumenSync keeps project access controlled, scoped, and enforced by the application — not by assumptions in the browser. From drawings and fixture information to project decisions and approvals, access is limited to the people who are authorized to work with it.",
+    primary: { href: "/request-demo", label: "Request a Demo" },
+    secondary: { href: "/contact", label: "Ask a Security Question" },
+    note: "Have a specific IT or security requirement? We'll tell you what LumenSync supports today and what it does not.",
   } satisfies Hero,
+
+  /** Hero diagram labels. Rendered as a figure, described for screen readers. */
+  diagram: {
+    frame: "LumenSync Project",
+    description:
+      "A request from an authenticated user passes through server-side authorization before any protected project data is returned. There is no direct path from the browser to project data.",
+    user: { title: "Authenticated User", tag: "Authenticated" },
+    authorization: { title: "Server Authorization", tag: "Checked server-side" },
+    data: { title: "Protected Project Data", tag: "Scoped" },
+    denied: "No direct path from the browser to project data.",
+  },
+
   access: {
     eyebrow: "Access",
-    heading: "Authenticated, scoped and checked on the server.",
+    heading: "Security starts with access.",
+    lead: "LumenSync is designed around a simple principle: project information should only be available to the people who are authorized to use it.",
     points: [
       {
-        title: "Authenticated application access",
-        body: "The LumenSync application requires a sign-in. There is no anonymous access to project data.",
+        title: "Authenticated access",
+        body: "The LumenSync application requires authenticated access before project information is made available. Authorization is enforced on the server so access decisions do not depend solely on what is shown or hidden in the browser.",
       },
       {
-        title: "Organisation and project boundaries",
-        body: "Projects belong to an organisation, and membership determines what a signed-in person can reach. Cross-tenant access is denied — including when a URL is entered directly.",
+        title: "Project-scoped permissions",
+        body: "Access is evaluated within the context of the organization, project, user, and requested action. Users receive access to the information and workflows appropriate to their authorized scope rather than unrestricted access across the system.",
       },
       {
-        title: "Role-based authorisation",
-        body: "Roles separate what a viewer, an installer and a project manager can do. Manager-only actions — approving a controls mapping, changing an RFI's status, issuing an RFI — are restricted to those roles.",
+        title: "Restricted actions",
+        body: "Higher-impact actions are restricted to the roles permitted to perform them. That includes controlled project-management actions and other workflows where LumenSync requires additional authorization before accepting a change.",
       },
       {
-        title: "Enforced server-side",
-        body: "Authorisation is applied on the server for reads and writes, not only by hiding buttons in the interface. Document and drawing access is granted through short-lived, per-request links rather than public URLs.",
+        title: "Protected documents",
+        body: "Project documents and drawings are not intended to function as unrestricted public files. Access is granted through controlled application workflows rather than exposing permanent public document links.",
       },
     ] satisfies Point[],
   },
+
+  release: {
+    eyebrow: "Release discipline",
+    heading: "Security is part of how we build.",
+    lead: "Security controls are only useful if the software continues to enforce them after every release. That is why LumenSync treats release discipline as part of the security model.",
+    steps: [
+      { label: "Review", detail: "Changes are read and approved before they can reach the release branch." },
+      { label: "Test", detail: "Automated checks run against the change, not just against the developer's machine." },
+      { label: "Release", detail: "Only reviewed, checked code is promoted to production." },
+      { label: "Verify", detail: "The running release is confirmed against the code that was approved." },
+      { label: "Roll back", detail: "A known-good release stays available until the new one is accepted." },
+    ] satisfies Step[],
+    points: [
+      {
+        title: "Reviewed changes",
+        body: "Production changes move through a controlled source and review process before release.",
+      },
+      {
+        title: "Automated verification",
+        body: "Builds are checked with automated testing before production deployment, including tests that exercise authentication, authorization, application behavior, accessibility, and browser workflows.",
+      },
+      {
+        title: "Production provenance",
+        body: "Production releases are verified against the code that was reviewed and approved so the team can establish exactly what version is serving customers.",
+      },
+      {
+        title: "Controlled rollback",
+        body: "Known-good deployments are preserved during release verification so production can be rolled back if a new release does not meet acceptance requirements.",
+      },
+    ] satisfies Point[],
+  },
+
+  failSafe: {
+    eyebrow: "Failure behavior",
+    heading: "Designed to fail safely.",
+    lead: "When LumenSync cannot confirm that an action should succeed, the preferred behavior is to stop rather than guess. That approach is used throughout sensitive workflows where a false success could create a larger operational problem.",
+    examplesIntro: "Examples include:",
+    examples: [
+      "authorization checks before protected actions",
+      "validation before accepting important workflow changes",
+      "rejecting invalid or incomplete requests rather than silently accepting them",
+      "surfacing delivery failures instead of presenting a false confirmation",
+    ],
+    closing:
+      "The objective is straightforward: when the system cannot safely complete an operation, the user should know.",
+    panel: {
+      heading: "When LumenSync cannot safely complete an action",
+      steps: [
+        "Stop",
+        "Reject the invalid request",
+        "Preserve the current state",
+        "Tell the user what happened",
+      ],
+    },
+  },
+
   separation: {
     eyebrow: "Separation",
-    heading: "This website and the application are different systems.",
-    points: [
-      {
-        title: "The marketing site holds no customer data",
-        body: "The site you are reading is a separate application on separate infrastructure. It has no database, no customer records and no access to the LumenSync application or its data.",
-      },
-      {
-        title: "The one thing this site accepts",
-        body: "The demo request form is the only place this website takes personal information. A submission is validated, forwarded once to the team, and not stored here — and if it cannot be delivered you are told it was not received rather than shown a false confirmation.",
-      },
-      {
-        title: "Product imagery is synthetic",
-        body: "Every product screenshot on this site comes from a vendor-owned demonstration project with synthetic data. No customer project, drawing, document or name appears anywhere on this site.",
-      },
-      {
-        title: "The application source is private",
-        body: "The application repository is private. This public website repository contains no application code, credentials or configuration.",
-      },
-      {
-        title: "Non-production environments are protected",
-        body: "Preview deployments of this site sit behind access protection and are marked non-indexable, so unreleased work is not exposed to search engines or the public.",
-      },
-    ] satisfies Point[],
+    heading: "The public website is separated from the application.",
+    lead: "The website you are reading is not the LumenSync project application. The public website does not provide public access to customer projects, drawings, fixture information, or application records. Project work takes place inside the authenticated LumenSync application.",
+    website: {
+      title: "Marketing website",
+      items: [
+        "Public product information",
+        "Documentation and legal content",
+        "Demo-request functionality",
+        "No public project access",
+      ],
+    },
+    application: {
+      title: "LumenSync application",
+      items: [
+        "Authenticated users",
+        "Project workflows",
+        "Drawings and fixture information",
+        "Authorized project actions",
+      ],
+    },
+    note: "This separation reduces the amount of application functionality exposed through the public marketing surface.",
   },
-  practice: {
-    eyebrow: "Engineering practice",
-    heading: "Changes are reviewed, tested and traceable.",
-    points: [
-      {
-        title: "Gated releases",
-        body: "Changes reach the main branch through pull requests with required automated checks — lint, type-check, unit tests, production build and end-to-end tests — and branch protection prevents force-pushes.",
-      },
-      {
-        title: "Release provenance",
-        body: "Deployed application builds are stamped with the exact commit they were built from, so what is running can always be identified.",
-      },
-      {
-        title: "Auditability",
-        body: "Consequential actions in the application — such as RFI status changes and issuance — are recorded with the acting user, the before and after state, and a timestamp.",
-      },
-      {
-        title: "Transport security",
-        body: "Both the application and this website are served over HTTPS by their hosting providers.",
-      },
-    ] satisfies Point[],
-  },
-  claims: {
-    eyebrow: "What we don't claim",
-    heading: "Plainly, so you can plan around it.",
-    lead: "LumenSync is an independent product under active development. We would rather tell you what we haven't done than let a badge imply otherwise.",
-    items: [
-      "No SOC 2, ISO 27001, HIPAA, FedRAMP or PCI certification or attestation is held or in progress that we are announcing here.",
-      "No third-party penetration test or security audit is being claimed.",
-      "No specific encryption, retention, uptime or recovery guarantee is being made on this page.",
-      "Detailed security architecture is shared under a direct conversation, not published publicly.",
+
+  assurance: {
+    heading: "We make security claims carefully.",
+    paragraphs: [
+      "Security language should describe what a product actually does — not what a badge, acronym, or marketing phrase might imply. LumenSync does not currently advertise third-party security certifications or attestations that it has not completed.",
+      "As the platform and customer requirements evolve, additional independent security reviews and assurance programs may become appropriate. Any such claims will be published only after they are supported by completed work.",
     ],
   },
-  contact: {
-    heading: "Reporting a concern",
-    body: "If you believe you have found a security issue in LumenSync, contact us through the demo request form and mark it as a security matter. Please do not post details publicly.",
-    cta: { href: "/request-demo", label: "Contact us about security" },
+
+  cta: {
+    heading: "Have a security requirement?",
+    body: "If your organization has a specific security, IT, access-control, procurement, or deployment requirement, talk with us before making assumptions about what LumenSync supports. We would rather give you a precise answer than a broad promise.",
+    primary: { href: "/contact", label: "Ask a Security Question" },
+    secondary: { href: "/request-demo", label: "Request a Demo" },
   },
 } as const;
 
