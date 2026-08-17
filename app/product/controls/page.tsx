@@ -1,6 +1,7 @@
 import { Container, Section } from "@/components/primitives";
 import { BoundaryColumns } from "@/components/marketing/boundary-columns";
 import { Callout } from "@/components/marketing/callout";
+import { ControlsMappingDiagram } from "@/components/marketing/controls-mapping-diagram";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { FeatureGrid } from "@/components/marketing/feature-grid";
 import { PageHero } from "@/components/marketing/page-hero";
@@ -15,7 +16,19 @@ export const metadata = pageMetadata("/product/controls");
 export default function ControlsPage() {
   return (
     <>
-      <PageHero hero={C.hero} />
+      <PageHero
+        hero={C.hero}
+        media={
+          <ControlsMappingDiagram
+            frame={C.diagram.frame}
+            schedule={C.diagram.schedule}
+            controls={C.diagram.controls}
+            mapping={C.diagram.mapping}
+            outcome={C.diagram.outcome}
+            description={C.diagram.description}
+          />
+        }
+      />
 
       <FeatureGrid
         id="documents"
