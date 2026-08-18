@@ -198,9 +198,24 @@ test.describe("launch readiness", () => {
         page.getByText(/Effective 16 August 2026/i).first(),
       ).toBeVisible();
       await expect(
-        page.getByRole("heading", { name: /Still with counsel/i }),
+        page.getByRole("heading", { name: /Legal review status/i }),
       ).toBeVisible();
-      await expect(page.getByText(/has not yet been reviewed by a lawyer/i).first()).toBeVisible();
+      await expect(
+        page
+          .getByText(
+            /approved by LumenSync for publication\. Independent legal review has not yet been completed\./i,
+          )
+          .first(),
+      ).toBeVisible();
+      await expect(
+        page.getByText(/Counsel review is pending\./i).first(),
+      ).toBeVisible();
+      // The page must never assert a review that has not happened.
+      await expect(
+        page.getByText(
+          /reviewed by counsel|approved by counsel|counsel has reviewed|legal review complete/i,
+        ),
+      ).toHaveCount(0);
     }
   });
 });

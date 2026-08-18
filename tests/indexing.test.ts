@@ -10,6 +10,9 @@ import {
 import {
   LEGAL_CONTACT,
   LEGAL_CONTENT_STATE,
+  LEGAL_STATUS_HEADING,
+  LEGAL_STATUS_NOTE,
+  COUNSEL_REVIEW_CLAIM_MARKERS,
   LEGAL_PLACEHOLDER_MARKERS,
   PRIVACY,
   TERMS,
@@ -25,6 +28,8 @@ function legalText(): string {
       page.notice.label,
       page.notice.body,
       page.openItemsIntro,
+      LEGAL_STATUS_HEADING,
+      LEGAL_STATUS_NOTE,
       ...page.openItems,
       ...page.sections.flatMap((s) => [s.heading, ...s.items]),
     ])
@@ -118,7 +123,7 @@ describe("legal approval cannot drift from the shipped words", () => {
     expect(() => assertLegalContentMatchesFlag({})).not.toThrow();
   });
 
-  it("labels the published version as un-reviewed until counsel signs it off", () => {
+  it("describes its own review status truthfully for the shipped state", () => {
     const text = legalText();
 
     if (LEGAL_CONTENT_STATE === "approved") {
@@ -126,10 +131,23 @@ describe("legal approval cannot drift from the shipped words", () => {
         expect(text, marker).not.toContain(marker);
       }
     } else {
-      // A self-authored version must say so, unmistakably, on the page itself.
-      expect(text).toContain("has not yet been reviewed by a lawyer");
+      // Not counsel-reviewed. The pages must never imply otherwise,
+      // whichever pre-approval state is shipped.
+      for (const claim of COUNSEL_REVIEW_CLAIM_MARKERS) {
+        expect(text.toLowerCase(), claim).not.toContain(claim);
+      }
       expect(PRIVACY.openItems.length, "privacy open items").toBeGreaterThan(0);
       expect(TERMS.openItems.length, "terms open items").toBeGreaterThan(0);
+    }
+
+    if (LEGAL_CONTENT_STATE === "owner-approved-pending-counsel") {
+      expect(text).toContain(LEGAL_STATUS_NOTE);
+      expect(text).toContain(LEGAL_STATUS_HEADING);
+    }
+
+    if (LEGAL_CONTENT_STATE === "published-pending-review") {
+      // Legacy state, retained: it carried its own explicit disclosure.
+      expect(text).toContain("has not yet been reviewed by a lawyer");
     }
   });
 

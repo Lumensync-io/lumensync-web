@@ -308,10 +308,17 @@ describe("core site routes (LSWEB-005)", () => {
       render(<Component />);
       const text = document.body.textContent ?? "";
       expect(screen.getAllByRole("heading", { level: 1 }), name).toHaveLength(1);
-      // The published version says plainly that counsel has not seen it, and
-      // keeps the outstanding items visible rather than papering over them.
-      expect(text, name).toMatch(/Still with counsel/);
-      expect(text, name).toMatch(/has not yet been reviewed by a lawyer/);
+      // The published version says plainly that counsel has not reviewed it,
+      // and keeps the outstanding items visible rather than papering over them.
+      expect(text, name).toMatch(/Legal review status/);
+      expect(text, name).toMatch(
+        /approved by LumenSync for publication\. Independent legal review has not yet been completed\./,
+      );
+      expect(text, name).toMatch(/Counsel review is pending\./);
+      // ...and never the opposite.
+      expect(text, name).not.toMatch(
+        /reviewed by counsel|approved by counsel|counsel has reviewed|legal review complete/i,
+      );
       expect(text, name).toMatch(/Effective/);
       // No commitment that was not actually decided.
       expect(text, name).not.toMatch(/we (guarantee|promise|warrant)\b/i);
