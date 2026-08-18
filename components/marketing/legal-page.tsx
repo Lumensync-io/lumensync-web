@@ -7,7 +7,12 @@ import {
   Section,
   TextLink,
 } from "@/components/primitives";
-import { LEGAL_EFFECTIVE_DATE, type LegalPage } from "@/lib/content/legal";
+import {
+  LEGAL_EFFECTIVE_DATE,
+  LEGAL_STATUS_HEADING,
+  LEGAL_STATUS_NOTE,
+  type LegalPage,
+} from "@/lib/content/legal";
 
 /**
  * Shared layout for the legal pages: the policy itself, then a visible list of
@@ -103,8 +108,11 @@ export function LegalPageBody({
               id="open-items-heading"
               className="text-2xl font-bold tracking-tight text-ink-strong"
             >
-              Still with counsel
+              {LEGAL_STATUS_HEADING}
             </h2>
+            <p className="mt-3 text-base leading-relaxed text-ink-body">
+              {LEGAL_STATUS_NOTE}
+            </p>
             <p className="mt-3 text-base leading-relaxed text-ink-body">
               {page.openItemsIntro}
             </p>

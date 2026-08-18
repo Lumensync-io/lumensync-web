@@ -29,6 +29,9 @@ export const LEGAL_CONTACT = "demo@lumensync.io";
  *
  * "awaiting-approval"        — placeholder only, nothing publishable.
  * "published-pending-review" — LumenSync's own v1, live, not yet seen by counsel.
+ * "owner-approved-pending-counsel"
+ *                            — approved by LumenSync for publication,
+ *                              counsel review not yet done.
  * "approved"                 — counsel has reviewed the shipped wording.
  *
  * Only "approved" satisfies the indexing gate. The build fails if
@@ -39,12 +42,40 @@ export const LEGAL_CONTACT = "demo@lumensync.io";
 export const LEGAL_CONTENT_STATE:
   | "awaiting-approval"
   | "published-pending-review"
-  | "approved" = "published-pending-review";
+  | "owner-approved-pending-counsel"
+  | "approved" = "owner-approved-pending-counsel";
 
 /** Wording that must not survive counsel review. Asserted by tests. */
 export const LEGAL_PLACEHOLDER_MARKERS = [
   "has not yet been reviewed by a lawyer",
   "Still with counsel",
+] as const;
+
+/**
+ * The public status block on both legal pages.
+ *
+ * Deliberately narrow: it says who approved the document and that counsel
+ * review has not happened. It does not claim legal review, legal sufficiency
+ * or regulatory compliance, because none of those is true yet.
+ */
+export const LEGAL_STATUS_HEADING = "Legal review status";
+export const LEGAL_STATUS_NOTE =
+  "This version is approved by LumenSync for publication. Independent legal review has not yet been completed.";
+
+/**
+ * Phrases that assert a completed legal review. While LEGAL_CONTENT_STATE is
+ * anything other than "approved", none of these may appear in published legal
+ * copy, so the pages cannot drift into implying a review that has not happened.
+ */
+export const COUNSEL_REVIEW_CLAIM_MARKERS = [
+  "reviewed by counsel",
+  "approved by counsel",
+  "counsel has reviewed",
+  "counsel-approved",
+  "counsel approved",
+  "legal review complete",
+  "legally reviewed",
+  "reviewed by a lawyer",
 ] as const;
 
 /** The section the demo-form state note attaches to on the privacy page. */
@@ -70,8 +101,8 @@ export interface LegalPage {
 }
 
 const REVIEW_NOTICE = {
-  label: "Version 1 — still with counsel",
-  body: `This is LumenSync's own account of how the site behaves, published so that anyone can see it rather than waiting for a lawyer's diary. It has not yet been reviewed by a lawyer. A review is booked; when it happens this page may change and the effective date below will change with it.`,
+  label: "Version 1",
+  body: "Published by LumenSync. Counsel review is pending.",
 };
 
 export const PRIVACY: LegalPage = {
